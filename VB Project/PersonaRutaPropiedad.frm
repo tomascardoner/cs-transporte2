@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{F0D2F211-CCB0-11D0-A316-00AA00688B10}#1.0#0"; "msdatlst.ocx"
+Object = "{F0D2F211-CCB0-11D0-A316-00AA00688B10}#1.0#0"; "MSDATLST.OCX"
 Begin VB.Form frmPersonaRutaPropiedad 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Propiedades"
@@ -334,6 +334,13 @@ Public Sub LoadDataAndShow(ByRef ParentForm As Form, ByRef PersonaRuta As Person
     Load Me
     CSM_Forms.CenterToParent ParentForm, Me
     
+    Dim SubeBaja As Boolean
+    SubeBaja = pCPermiso.GotPermission(PERMISO_VIAJE_DETALLE_SUBEBAJA_MOSTRAR, False)
+    lblSube.Visible = SubeBaja
+    txtSube.Visible = SubeBaja
+    lblBaja.Visible = SubeBaja
+    txtBaja.Visible = SubeBaja
+    
     txtPersona.Text = mPersonaRuta.Persona.ApellidoNombre
     
     With mPersonaRuta
@@ -418,7 +425,7 @@ Private Sub datcboRuta_Change()
         Set Ruta = Nothing
         
         IDOrigenSave = Val(datcboOrigen.BoundText)
-        Call CSM_Control_DataCombo.FillFromSQL(datcboOrigen, "SELECT RutaDetalle.IDLugar, Lugar.Nombre FROM RutaDetalle INNER JOIN Lugar ON RutaDetalle.IDLugar = Lugar.IDLugar WHERE RutaDetalle.IDRuta = '" & ReplaceQuote(datcboRuta.Text) & "' AND RutaDetalle.Indice < " & mRutaDetallaIndiceMaximo & " AND RutaDetalle.IDLugar <> " & pParametro.Lugar_ID_Otro & " AND (Lugar.Activo = 1 OR Lugar.IDLugar = " & mPersonaRuta.IDOrigen & ") ORDER BY RutaDetalle.Indice, Lugar.Nombre", "IDLugar", "Nombre", "Orígenes", cscpItemOrfirst, IDOrigenSave)
+        Call CSM_Control_DataCombo.FillFromSQL(datcboOrigen, "SELECT RutaDetalle.IDLugar, Lugar.Nombre FROM RutaDetalle INNER JOIN Lugar ON RutaDetalle.IDLugar = Lugar.IDLugar WHERE RutaDetalle.IDRuta = '" & ReplaceQuote(datcboRuta.Text) & "' AND RutaDetalle.Indice < " & mRutaDetallaIndiceMaximo & " AND RutaDetalle.IDLugar <> " & pParametro.Lugar_ID_Otro & " AND (Lugar.Activo = 1 OR Lugar.IDLugar = " & mPersonaRuta.IDOrigen & ") ORDER BY RutaDetalle.Indice, Lugar.Nombre", "IDLugar", "Nombre", "Orígenes", cscpItemOrFirst, IDOrigenSave)
         
         datcboOrigen_Change
     End If
