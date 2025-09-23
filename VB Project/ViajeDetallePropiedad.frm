@@ -697,7 +697,7 @@ Begin VB.Form frmViajeDetallePropiedad
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   106299393
+      Format          =   58720257
       CurrentDate     =   36950
    End
    Begin MSDataListLib.DataCombo datcboHora 
@@ -840,7 +840,7 @@ Begin VB.Form frmViajeDetallePropiedad
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "HH:mm"
-      Format          =   106299395
+      Format          =   58720259
       UpDown          =   -1  'True
       CurrentDate     =   36494
    End
@@ -863,7 +863,7 @@ Begin VB.Form frmViajeDetallePropiedad
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   106299393
+      Format          =   58720257
       CurrentDate     =   36950
    End
    Begin MSDataListLib.DataCombo datcboRutaConexion 
@@ -1501,43 +1501,19 @@ Public Sub LoadDataAndShow(ByRef ParentForm As Form, ByRef ViajeDetalle As Viaje
 
         datcboRuta.BoundText = .IDRuta
         
+        Dim permiteModificar As Boolean
         If mNew Then
-            If Not pCPermiso.GotPermission(PERMISO_VIAJE_DETALLE_ADD_FECHAHORARUTA, False) Then
-                cmdAnterior.Visible = False
-                dtpFecha.Enabled = False
-                cmdSiguiente.Visible = False
-                cmdHoy.Visible = False
-                datcboHora.Enabled = False
-                datcboRuta.Enabled = False
-                cmdRuta.Visible = False
-            Else
-                cmdAnterior.Visible = True
-                dtpFecha.Enabled = True
-                cmdSiguiente.Visible = True
-                cmdHoy.Visible = True
-                datcboHora.Enabled = True
-                datcboRuta.Enabled = True
-                cmdRuta.Visible = True
-            End If
+            permiteModificar = pCPermiso.GotPermission(PERMISO_VIAJE_DETALLE_ADD_FECHAHORARUTA, False)
         Else
-            If Not pCPermiso.GotPermission(PERMISO_VIAJE_DETALLE_MODIFY_FECHAHORARUTA, False) Then
-                cmdAnterior.Visible = False
-                dtpFecha.Enabled = False
-                cmdSiguiente.Visible = False
-                cmdHoy.Visible = False
-                datcboHora.Enabled = False
-                datcboRuta.Enabled = False
-                cmdRuta.Visible = False
-            Else
-                cmdAnterior.Visible = True
-                dtpFecha.Enabled = True
-                cmdSiguiente.Visible = True
-                cmdHoy.Visible = True
-                datcboHora.Enabled = True
-                datcboRuta.Enabled = True
-                cmdRuta.Visible = True
-            End If
+            permiteModificar = pCPermiso.GotPermission(PERMISO_VIAJE_DETALLE_MODIFY_FECHAHORARUTA, False)
         End If
+        cmdAnterior.Visible = permiteModificar
+        dtpFecha.Enabled = permiteModificar
+        cmdSiguiente.Visible = permiteModificar
+        cmdHoy.Visible = permiteModificar
+        datcboHora.Enabled = permiteModificar
+        datcboRuta.Enabled = permiteModificar
+        cmdRuta.Visible = permiteModificar
         
         If mNew Then
             optTipoPasajero.value = True
@@ -1785,8 +1761,22 @@ Public Sub LoadDataAndShow(ByRef ParentForm As Form, ByRef ViajeDetalle As Viaje
                         txtImporte.Enabled = True
                         txtImporteContado.Enabled = True
                         datcboMedioPago.Enabled = True
+                        cboCuotas.Enabled = True
                         txtOperacion.Enabled = True
                         datcboCuentaCorrienteCaja.Enabled = True
+                        cmdOK.Visible = True
+                        cmdCancel.Caption = "Cancelar"
+                    End If
+                End If
+                If .OcupanteTipo = OCUPANTE_TIPO_PASAJERO Then
+                    If pCPermiso.GotPermission(PERMISO_VIAJE_DETALLE_FINALIZADO_MODIFY_MEDIOPAGO_DEBITO, False) Then
+                        txtImporteContado.Enabled = True
+                        datcboMedioPago.Enabled = True
+                        cboCuotas.Enabled = True
+                        txtOperacion.Enabled = True
+                        datcboCuentaCorrienteCaja.Enabled = True
+                        cmdPersonaCuentaCorriente.Visible = True
+                        cmdPersonaCuentaCorrienteClear.Visible = True
                         cmdOK.Visible = True
                         cmdCancel.Caption = "Cancelar"
                     End If
@@ -3662,6 +3652,7 @@ Private Sub EnableControls(ByVal value As Boolean)
     txtImporte.Enabled = value
     txtImporteContado.Enabled = value
     datcboMedioPago.Enabled = value
+    cboCuotas.Enabled = value
     txtOperacion.Enabled = value
     
     chkImprimirSaldo.Enabled = value
@@ -3679,6 +3670,7 @@ Private Sub EnableControls(ByVal value As Boolean)
     dtpEntregadaHora.Enabled = value
     
     chkFacturar.Enabled = value
+    txtFacturaNumero.Enabled = value
     txtFacturarNotas.Enabled = value
     
     txtNotas.Enabled = value

@@ -83,7 +83,7 @@ Begin VB.Form frmViajeDetalle
       FixedOrder      =   -1  'True
       _CBWidth        =   9360
       _CBHeight       =   630
-      _Version        =   "6.7.9782"
+      _Version        =   "6.7.9816"
       Child1          =   "tlbMain"
       MinHeight1      =   570
       Width1          =   3000

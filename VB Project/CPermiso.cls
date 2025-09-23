@@ -371,6 +371,7 @@ Public Sub Load()
     Add PERMISO_VIAJE_DETALLE_TRANSFER_ALLOWOUTOFRANGE, "Detalle de Viajes", "Transferencia de Pasajeros entre Viajes fuera del rango horario establecido."
     Add PERMISO_VIAJE_DETALLE_TRANSFER_ALLOWDIFFERENTROUTE, "Detalle de Viajes", "Transferencia de Pasajeros entre Viajes de distinta Ruta."
     Add PERMISO_VIAJE_DETALLE_FINALIZADO_MODIFY, "Detalle de Viajes", "Modificar con Viaje Finalizado"
+    Add PERMISO_VIAJE_DETALLE_FINALIZADO_MODIFY_MEDIOPAGO_DEBITO, "Detalle de Viajes", "Modificar medio de pago y debitar a"
     Add PERMISO_VIAJE_DETALLE_SUBEBAJA_MOSTRAR, "Detalle de Viajes", "Mostrar campos sube/baja"
     
     Add PERMISO_DOCUMENTOFISCAL, "Documentos Fiscales", "Ver"

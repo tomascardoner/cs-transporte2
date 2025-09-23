@@ -147,6 +147,7 @@ Public Const PERMISO_VIAJE_DETALLE_TRANSFER = "Viaje_Detalle_Transferencia"
 Public Const PERMISO_VIAJE_DETALLE_TRANSFER_ALLOWOUTOFRANGE = "Viaje_Detalle_Transferencia_Permite_FueraRango"
 Public Const PERMISO_VIAJE_DETALLE_TRANSFER_ALLOWDIFFERENTROUTE = "Viaje_Detalle_Transferencia_Permite_RutaDiferente"
 Public Const PERMISO_VIAJE_DETALLE_FINALIZADO_MODIFY = "Viaje_Detalle_Finalizado_Modificar"
+Public Const PERMISO_VIAJE_DETALLE_FINALIZADO_MODIFY_MEDIOPAGO_DEBITO = "Viaje_Detalle_Finalizado_Modificar_MedioPago_Debito"
 Public Const PERMISO_VIAJE_DETALLE_SUBEBAJA_MOSTRAR = "Viaje_Detalle_SubeBaja_Mostrar"
 
 Public Const PERMISO_DOCUMENTOFISCAL = "DocumentoFiscal"
