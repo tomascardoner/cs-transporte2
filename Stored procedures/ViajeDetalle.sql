@@ -832,9 +832,9 @@ CREATE PROCEDURE dbo.sp_ViajeDetalle_ByPersonaHorario
 	@FechaDesde_FILTER char(10),
 	@FechaHasta_FILTER char(10) AS
 
-	SELECT ViajeLista.FechaHora, ViajeDetalleLista.IDViajeDetalle, ViajeDetalleLista.Indice
+	SELECT ViajeLista.IDViaje, ViajeLista.FechaHora, ViajeDetalleLista.IDViajeDetalle, ViajeDetalleLista.Indice
 		FROM
-			(SELECT Viaje.FechaHora, Viaje.IDRuta
+			(SELECT Viaje.IDViaje, Viaje.FechaHora, Viaje.IDRuta
 				FROM Viaje
 				WHERE Viaje.DiaSemanaBase = @DiaSemana_FILTER
 					AND convert(char(8), Viaje.FechaHora, 108) = @Hora_FILTER

@@ -273,6 +273,7 @@ Private Function GenerarReservasFijas() As Boolean
                 .RefreshListSkip = True
                 .VerifyEstadoCondicionalOnAddNew = True
             
+                .IDViaje = recData("IDViaje").value
                 .FechaHora = recData("FechaHora").value
                 .IDRuta = IDRuta
                 .OcupanteTipo = OCUPANTE_TIPO_PASAJERO
