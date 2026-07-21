@@ -260,7 +260,6 @@ VersionFileDescription="CS-Transporte 2006 Application"
 VersionLegalCopyright="© 2001-2026 Cardoner Sistemas"
 VersionLegalTrademarks="® CS-Transporte 2006"
 VersionProductName="CS-Transporte"
-CondComp="USARDLLKUBALSOFT = 0"
 CompilationType=0
 OptimizationType=0
 FavorPentiumPro(tm)=0

@@ -697,7 +697,7 @@ Begin VB.Form frmViajeDetallePropiedad
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   58720257
+      Format          =   117899265
       CurrentDate     =   36950
    End
    Begin MSDataListLib.DataCombo datcboHora 
@@ -840,7 +840,7 @@ Begin VB.Form frmViajeDetallePropiedad
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "HH:mm"
-      Format          =   58720259
+      Format          =   117899267
       UpDown          =   -1  'True
       CurrentDate     =   36494
    End
@@ -863,7 +863,7 @@ Begin VB.Form frmViajeDetallePropiedad
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   58720257
+      Format          =   117899265
       CurrentDate     =   36950
    End
    Begin MSDataListLib.DataCombo datcboRutaConexion 
@@ -3086,11 +3086,7 @@ Private Sub cmdOK_Click()
         If ((mNew And cboRealizado.ListIndex <> VIAJE_DETALLE_REALIZADO_NO) Or mViajeDetalle.FechaHora <> CDate(dtpFecha.value & " " & datcboHora.Text) Or mViajeDetalle.IDRuta <> datcboRuta.BoundText Or mViajeDetalle.IDOrigen <> Val(datcboOrigen.BoundText) Or mViajeDetalle.IDDestino <> Val(datcboDestino.BoundText) Or (mViajeDetalle.Realizado = VIAJE_DETALLE_REALIZADO_NO And cboRealizado.ListIndex <> VIAJE_DETALLE_REALIZADO_NO)) Then
             Viaje.IDOrigen = Val(datcboOrigen.BoundText)
             Viaje.IDDestino = Conexion_Tramo1_IDDestino
-            '#If USARDLLKUBALSOFT Then
-                'AsientoAsignado = 99
-            '#Else
-                AsientoAsignado = Viaje.Asiento_Asignar_GetAsiento(mViajeDetalle.Indice)
-            '#End If
+            AsientoAsignado = Viaje.Asiento_Asignar_GetAsiento(mViajeDetalle.Indice)
             Select Case AsientoAsignado
                 Case -1
                     MsgBox "No se puede " & IIf(mNew, "tomar", "actualizar") & " la Reserva porque no hay más lugar en el Viaje de origen.", vbExclamation, App.Title

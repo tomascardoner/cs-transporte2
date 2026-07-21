@@ -5,7 +5,7 @@ CLS
 SET ISQL_EXE="sqlcmd"
 SET SERVER_NAME=localhost
 SET USERID=sa
-SET PASSWORD=Tai1802Pei
+SET PASSWORD=
 SET DATABASE=CSTransporte_LobosBus_Sample
 
 ECHO ------------------------------------------
