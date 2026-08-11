@@ -401,9 +401,11 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private mIDViajeLeft As Long
 Private mFechaHoraLeft As Date
 Private mIDRutaLeft As String
 
+Private mIDViajeRight As Long
 Private mFechaHoraRight As Date
 Private mIDRutaRight As String
 
@@ -454,7 +456,7 @@ Public Function FillListViewLeft(ByVal FechaHora As Date, ByVal IDRuta As String
     With recData
         If Not .EOF Then
             Do While Not .EOF
-                Select Case .Fields("Estado").Value
+                Select Case .Fields("Estado").value
                     Case VIAJE_DETALLE_ESTADO_CONFIRMADO
                         EstadoKey = "CONFIRMADO"
                     Case VIAJE_DETALLE_ESTADO_CONDICIONAL
@@ -466,25 +468,25 @@ Public Function FillListViewLeft(ByVal FechaHora As Date, ByVal IDRuta As String
                 '//////////////////////////////////////////////////
                 'ROWS SEPARATOR BY STATUS
                 If pParametro.ViajeDetalle_SeparateRowsByStatus Then
-                    If UltimoEstado <> .Fields("Estado").Value Then
+                    If UltimoEstado <> .Fields("Estado").value Then
                         If UltimoEstado <> "" Then
-                            Set ListItem = lvwDataLeft.ListItems.Add(, KEY_STRINGER & (.Fields("Indice").Value * -1), "")
+                            Set ListItem = lvwDataLeft.ListItems.Add(, KEY_STRINGER & (.Fields("Indice").value * -1), "")
                         End If
-                        UltimoEstado = .Fields("Estado").Value
+                        UltimoEstado = .Fields("Estado").value
                     End If
                 End If
                 
                 'Pasajero
-                Set ListItem = lvwDataLeft.ListItems.Add(, KEY_STRINGER & .Fields("Indice").Value, Val(.Fields("Orden").Value & ""), , "PASAJERO_" & EstadoKey)
-                ListItem.SubItems(1) = .Fields("Persona").Value
-                ViajeDetalle.Estado = .Fields("Estado").Value & ""
+                Set ListItem = lvwDataLeft.ListItems.Add(, KEY_STRINGER & .Fields("Indice").value, Val(.Fields("Orden").value & ""), , "PASAJERO_" & EstadoKey)
+                ListItem.SubItems(1) = .Fields("Persona").value
+                ViajeDetalle.Estado = .Fields("Estado").value & ""
                 ListItem.SubItems(2) = ViajeDetalle.Estado_ToString
-                ListItem.SubItems(3) = .Fields("Asiento").Value & ""
-                ListItem.SubItems(4) = IIf(IsNull(.Fields("Sube").Value), .Fields("Origen").Value, .Fields("Sube").Value)
-                ListItem.SubItems(5) = IIf(IsNull(.Fields("Baja").Value), .Fields("Destino").Value, .Fields("Baja").Value)
-                ViajeDetalle.ReservaTipo = .Fields("ReservaTipo").Value
+                ListItem.SubItems(3) = .Fields("Asiento").value & ""
+                ListItem.SubItems(4) = IIf(IsNull(.Fields("Sube").value), .Fields("Origen").value, .Fields("Sube").value)
+                ListItem.SubItems(5) = IIf(IsNull(.Fields("Baja").value), .Fields("Destino").value, .Fields("Baja").value)
+                ViajeDetalle.ReservaTipo = .Fields("ReservaTipo").value
                 ListItem.SubItems(6) = ViajeDetalle.ReservaTipo_ToString
-                ListItem.SubItems(7) = IIf(.Fields("ListaPasajero").Value, "Sí", "")
+                ListItem.SubItems(7) = IIf(.Fields("ListaPasajero").value, "Sí", "")
                 .MoveNext
             Loop
         End If
@@ -554,7 +556,7 @@ Public Function FillListViewRight(ByVal FechaHora As Date, ByVal IDRuta As Strin
     With recData
         If Not .EOF Then
             Do While Not .EOF
-                Select Case .Fields("Estado").Value
+                Select Case .Fields("Estado").value
                     Case VIAJE_DETALLE_ESTADO_CONFIRMADO
                         EstadoKey = "CONFIRMADO"
                     Case VIAJE_DETALLE_ESTADO_CONDICIONAL
@@ -566,25 +568,25 @@ Public Function FillListViewRight(ByVal FechaHora As Date, ByVal IDRuta As Strin
                 '//////////////////////////////////////////////////
                 'ROWS SEPARATOR BY STATUS
                 If pParametro.ViajeDetalle_SeparateRowsByStatus Then
-                    If UltimoEstado <> .Fields("Estado").Value Then
+                    If UltimoEstado <> .Fields("Estado").value Then
                         If UltimoEstado <> "" Then
-                            Set ListItem = lvwDataRight.ListItems.Add(, KEY_STRINGER & (.Fields("Indice").Value * -1), "")
+                            Set ListItem = lvwDataRight.ListItems.Add(, KEY_STRINGER & (.Fields("Indice").value * -1), "")
                         End If
-                        UltimoEstado = .Fields("Estado").Value
+                        UltimoEstado = .Fields("Estado").value
                     End If
                 End If
                 
                 'Pasajero
-                Set ListItem = lvwDataRight.ListItems.Add(, KEY_STRINGER & .Fields("Indice").Value, Val(.Fields("Orden").Value & ""), , "PASAJERO_" & EstadoKey)
-                ListItem.SubItems(1) = .Fields("Persona").Value
-                ViajeDetalle.Estado = .Fields("Estado").Value & ""
+                Set ListItem = lvwDataRight.ListItems.Add(, KEY_STRINGER & .Fields("Indice").value, Val(.Fields("Orden").value & ""), , "PASAJERO_" & EstadoKey)
+                ListItem.SubItems(1) = .Fields("Persona").value
+                ViajeDetalle.Estado = .Fields("Estado").value & ""
                 ListItem.SubItems(2) = ViajeDetalle.Estado_ToString
-                ListItem.SubItems(3) = .Fields("Asiento").Value & ""
-                ListItem.SubItems(4) = IIf(IsNull(.Fields("Sube").Value), .Fields("Origen").Value, .Fields("Sube").Value)
-                ListItem.SubItems(5) = IIf(IsNull(.Fields("Baja").Value), .Fields("Destino").Value, .Fields("Baja").Value)
-                ViajeDetalle.ReservaTipo = .Fields("ReservaTipo").Value
+                ListItem.SubItems(3) = .Fields("Asiento").value & ""
+                ListItem.SubItems(4) = IIf(IsNull(.Fields("Sube").value), .Fields("Origen").value, .Fields("Sube").value)
+                ListItem.SubItems(5) = IIf(IsNull(.Fields("Baja").value), .Fields("Destino").value, .Fields("Baja").value)
+                ViajeDetalle.ReservaTipo = .Fields("ReservaTipo").value
                 ListItem.SubItems(6) = ViajeDetalle.ReservaTipo_ToString
-                ListItem.SubItems(7) = IIf(.Fields("ListaPasajero").Value, "Sí", "")
+                ListItem.SubItems(7) = IIf(.Fields("ListaPasajero").value, "Sí", "")
                 .MoveNext
             Loop
         End If
@@ -1070,7 +1072,7 @@ Public Sub ViajeSelected(ByRef Viaje As Viaje, ByVal SelectTag As String)
                     Exit Sub
                 End If
             End If
-            If Viaje.FechaHora = mFechaHoraRight Then
+            If Viaje.IDViaje = mIDViajeRight Then
                 MsgBox "El Viaje de Origen seleccionado es el mismo que el Viaje de Destino.", vbInformation, App.Title
                 cmdSelectLeft.SetFocus
                 Exit Sub
@@ -1086,6 +1088,7 @@ Public Sub ViajeSelected(ByRef Viaje As Viaje, ByVal SelectTag As String)
             End If
         End If
         
+        mIDViajeLeft = Viaje.IDViaje
         mFechaHoraLeft = Viaje.FechaHora
         mIDRutaLeft = Viaje.IDRuta
         
@@ -1107,7 +1110,7 @@ Public Sub ViajeSelected(ByRef Viaje As Viaje, ByVal SelectTag As String)
                     Exit Sub
                 End If
             End If
-            If Viaje.FechaHora = mFechaHoraLeft Then
+            If Viaje.IDViaje = mIDViajeLeft Then
                 MsgBox "El Viaje de Origen seleccionado es el mismo que el Viaje de Destino.", vbInformation, App.Title
                 cmdSelectRight.SetFocus
                 Exit Sub
@@ -1123,6 +1126,7 @@ Public Sub ViajeSelected(ByRef Viaje As Viaje, ByVal SelectTag As String)
             End If
         End If
         
+        mIDViajeRight = Viaje.IDViaje
         mFechaHoraRight = Viaje.FechaHora
         mIDRutaRight = Viaje.IDRuta
         
