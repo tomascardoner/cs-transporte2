@@ -1,10 +1,7 @@
 ------------------------------------------------------------------------------------------
 -- HORARIO_LIST_DIASEMANA
 ------------------------------------------------------------------------------------------
-IF EXISTS (SELECT name 
-	   FROM   sysobjects 
-	   WHERE  name = N'sp_Horario_List_DiaSemana' 
-	   AND 	  type = 'P')
+IF EXISTS (SELECT name FROM sys.procedures WHERE  name = N'sp_Horario_List_DiaSemana')
     DROP PROCEDURE sp_Horario_List_DiaSemana
 GO
 
@@ -17,3 +14,5 @@ CREATE PROCEDURE dbo.sp_Horario_List_DiaSemana
 		WHERE h.DiaSemana = @DiaSemana_FILTER AND h.Activo = 1
 
 GO
+
+GRANT EXECUTE ON dbo.sp_Horario_List_DiaSemana TO cstransporte
