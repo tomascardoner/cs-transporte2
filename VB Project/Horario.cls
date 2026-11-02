@@ -17,6 +17,11 @@ Option Explicit
 Private mDiaSemana As Integer
 Private mHora As Date
 Private mIDRuta As String
+Private mRutaOtra As String
+Private mIDPersona As Long
+Private mKilometro As Integer
+Private mDuracion As Integer
+Private mImporte As Currency
 Private mIDConductor As Long
 Private mIDConductor2 As Long
 Private mIDVehiculo As Long
@@ -54,11 +59,11 @@ Public Property Get DiaSemana() As Integer
     DiaSemana = mDiaSemana
 End Property
 
-Public Property Let DiaSemana(ByVal Value As Integer)
-    If Value <> mDiaSemana Then
+Public Property Let DiaSemana(ByVal value As Integer)
+    If value <> mDiaSemana Then
         mIsDirty = True
     End If
-    mDiaSemana = Value
+    mDiaSemana = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -72,11 +77,11 @@ Public Property Get Hora_Formatted() As String
     Hora_Formatted = Format(mHora, "Short Time")
 End Property
 
-Public Property Let Hora(ByVal Value As Date)
-    If Value <> mHora Then
+Public Property Let Hora(ByVal value As Date)
+    If value <> mHora Then
         mIsDirty = True
     End If
-    mHora = Value
+    mHora = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -86,11 +91,92 @@ Public Property Get IDRuta() As String
     IDRuta = mIDRuta
 End Property
 
-Public Property Let IDRuta(ByVal Value As String)
-    If Value <> mIDRuta Then
+Public Property Let IDRuta(ByVal value As String)
+    If value <> mIDRuta Then
         mIsDirty = True
     End If
-    mIDRuta = Value
+    mIDRuta = value
+End Property
+
+'////////////////////////////////////////////////////////////////////////
+'\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Public Property Get RutaOtra() As String
+    RutaOtra = mRutaOtra
+End Property
+
+Public Property Let RutaOtra(ByVal value As String)
+    If value <> mRutaOtra Then
+        mIsDirty = True
+    End If
+    mRutaOtra = value
+End Property
+
+'////////////////////////////////////////////////////////////////////////
+'\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Public Property Get Ruta_DisplayName() As String
+    Ruta_DisplayName = mIDRuta & IIf(mIDRuta = pParametro.Ruta_ID_Otra Or mIDRuta = pParametro.Ruta_Paquete_ID, ": " & mRutaOtra, "")
+End Property
+
+'////////////////////////////////////////////////////////////////////////
+'\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Public Property Get IDPersona() As Long
+    IDPersona = mIDPersona
+End Property
+
+Public Property Let IDPersona(ByVal value As Long)
+    If value <> mIDPersona Then
+        mIsDirty = True
+    End If
+    mIDPersona = value
+End Property
+
+'////////////////////////////////////////////////////////////////////////
+'\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Public Property Get Kilometro() As Integer
+    Kilometro = mKilometro
+End Property
+
+Public Property Let Kilometro(ByVal value As Integer)
+    If value <> mKilometro Then
+        mIsDirty = True
+    End If
+    mKilometro = value
+End Property
+
+'////////////////////////////////////////////////////////////////////////
+'\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Public Property Get Duracion() As Integer
+    Duracion = mDuracion
+End Property
+
+Public Property Let Duracion(ByVal value As Integer)
+    If value <> mDuracion Then
+        mIsDirty = True
+    End If
+    mDuracion = value
+End Property
+
+'////////////////////////////////////////////////////////////////////////
+'\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Public Property Get Importe() As Currency
+    Importe = mImporte
+End Property
+
+Public Property Get Importe_Formatted() As String
+    Importe_Formatted = Format(mImporte, "Currency")
+End Property
+
+Public Property Let Importe(ByVal value As Currency)
+    If value <> mImporte Then
+        mIsDirty = True
+    End If
+    mImporte = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -100,11 +186,11 @@ Public Property Get IDConductor() As Long
     IDConductor = mIDConductor
 End Property
 
-Public Property Let IDConductor(ByVal Value As Long)
-    If Value <> mIDConductor Then
+Public Property Let IDConductor(ByVal value As Long)
+    If value <> mIDConductor Then
         mIsDirty = True
     End If
-    mIDConductor = Value
+    mIDConductor = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -114,11 +200,11 @@ Public Property Get IDConductor2() As Long
     IDConductor2 = mIDConductor2
 End Property
 
-Public Property Let IDConductor2(ByVal Value As Long)
-    If Value <> mIDConductor2 Then
+Public Property Let IDConductor2(ByVal value As Long)
+    If value <> mIDConductor2 Then
         mIsDirty = True
     End If
-    mIDConductor2 = Value
+    mIDConductor2 = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -128,11 +214,11 @@ Public Property Get IDVehiculo() As Long
     IDVehiculo = mIDVehiculo
 End Property
 
-Public Property Let IDVehiculo(ByVal Value As Long)
-    If Value <> mIDVehiculo Then
+Public Property Let IDVehiculo(ByVal value As Long)
+    If value <> mIDVehiculo Then
         mIsDirty = True
     End If
-    mIDVehiculo = Value
+    mIDVehiculo = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -146,16 +232,16 @@ Public Property Get ConductorImporteTramoCompleto_FormattedAsString() As String
     ConductorImporteTramoCompleto_FormattedAsString = IIf(mConductorImporteTramoCompleto = -1, "", Format(mConductorImporteTramoCompleto, "Currency"))
 End Property
 
-Public Property Let ConductorImporteTramoCompleto(ByVal Value As Currency)
-    If Value <> mConductorImporteTramoCompleto Then
+Public Property Let ConductorImporteTramoCompleto(ByVal value As Currency)
+    If value <> mConductorImporteTramoCompleto Then
         mIsDirty = True
     End If
-    mConductorImporteTramoCompleto = Value
+    mConductorImporteTramoCompleto = value
 End Property
 
-Public Property Let ConductorImporteTramoCompleto_FormattedAsString(ByVal Value As String)
-    If IsNumeric(Value) Then
-        ConductorImporteTramoCompleto = CCur(Value)
+Public Property Let ConductorImporteTramoCompleto_FormattedAsString(ByVal value As String)
+    If IsNumeric(value) Then
+        ConductorImporteTramoCompleto = CCur(value)
     Else
         ConductorImporteTramoCompleto = -1
     End If
@@ -172,16 +258,16 @@ Public Property Get ConductorImporteTramo1_FormattedAsString() As String
     ConductorImporteTramo1_FormattedAsString = IIf(mConductorImporteTramo1 = -1, "", Format(mConductorImporteTramo1, "Currency"))
 End Property
 
-Public Property Let ConductorImporteTramo1(ByVal Value As Currency)
-    If Value <> mConductorImporteTramo1 Then
+Public Property Let ConductorImporteTramo1(ByVal value As Currency)
+    If value <> mConductorImporteTramo1 Then
         mIsDirty = True
     End If
-    mConductorImporteTramo1 = Value
+    mConductorImporteTramo1 = value
 End Property
 
-Public Property Let ConductorImporteTramo1_FormattedAsString(ByVal Value As String)
-    If IsNumeric(Value) Then
-        ConductorImporteTramo1 = CCur(Value)
+Public Property Let ConductorImporteTramo1_FormattedAsString(ByVal value As String)
+    If IsNumeric(value) Then
+        ConductorImporteTramo1 = CCur(value)
     Else
         ConductorImporteTramo1 = -1
     End If
@@ -198,16 +284,16 @@ Public Property Get ConductorImporteTramo2_FormattedAsString() As String
     ConductorImporteTramo2_FormattedAsString = IIf(mConductorImporteTramo2 = -1, "", Format(mConductorImporteTramo2, "Currency"))
 End Property
 
-Public Property Let ConductorImporteTramo2(ByVal Value As Currency)
-    If Value <> mConductorImporteTramo2 Then
+Public Property Let ConductorImporteTramo2(ByVal value As Currency)
+    If value <> mConductorImporteTramo2 Then
         mIsDirty = True
     End If
-    mConductorImporteTramo2 = Value
+    mConductorImporteTramo2 = value
 End Property
 
-Public Property Let ConductorImporteTramo2_FormattedAsString(ByVal Value As String)
-    If IsNumeric(Value) Then
-        ConductorImporteTramo2 = CCur(Value)
+Public Property Let ConductorImporteTramo2_FormattedAsString(ByVal value As String)
+    If IsNumeric(value) Then
+        ConductorImporteTramo2 = CCur(value)
     Else
         ConductorImporteTramo2 = -1
     End If
@@ -220,11 +306,11 @@ Public Property Get Notas() As String
     Notas = mNotas
 End Property
 
-Public Property Let Notas(ByVal Value As String)
-    If Value <> mNotas Then
+Public Property Let Notas(ByVal value As String)
+    If value <> mNotas Then
         mIsDirty = True
     End If
-    mNotas = Value
+    mNotas = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -234,11 +320,11 @@ Public Property Get Activo() As Boolean
     Activo = mActivo
 End Property
 
-Public Property Let Activo(ByVal Value As Boolean)
-    If Value <> mActivo Then
+Public Property Let Activo(ByVal value As Boolean)
+    If value <> mActivo Then
         mIsDirty = True
     End If
-    mActivo = Value
+    mActivo = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -248,11 +334,11 @@ Public Property Get Personal() As Boolean
     Personal = mPersonal
 End Property
 
-Public Property Let Personal(ByVal Value As Boolean)
-    If Value <> mPersonal Then
+Public Property Let Personal(ByVal value As Boolean)
+    If value <> mPersonal Then
         mIsDirty = True
     End If
-    mPersonal = Value
+    mPersonal = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -262,11 +348,11 @@ Public Property Get FechaHoraCreacion() As Date
     FechaHoraCreacion = mFechaHoraCreacion
 End Property
 
-Public Property Let FechaHoraCreacion(ByVal Value As Date)
-    If Value <> mFechaHoraCreacion Then
+Public Property Let FechaHoraCreacion(ByVal value As Date)
+    If value <> mFechaHoraCreacion Then
         mIsDirty = True
     End If
-    mFechaHoraCreacion = Value
+    mFechaHoraCreacion = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -276,11 +362,11 @@ Public Property Get IDUsuarioCreacion() As String
     IDUsuarioCreacion = mIDUsuarioCreacion
 End Property
 
-Public Property Let IDUsuarioCreacion(ByVal Value As String)
-    If Value <> mIDUsuarioCreacion Then
+Public Property Let IDUsuarioCreacion(ByVal value As String)
+    If value <> mIDUsuarioCreacion Then
         mIsDirty = True
     End If
-    mIDUsuarioCreacion = Value
+    mIDUsuarioCreacion = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -290,11 +376,11 @@ Public Property Get FechaHoraModificacion() As Date
     FechaHoraModificacion = mFechaHoraModificacion
 End Property
 
-Public Property Let FechaHoraModificacion(ByVal Value As Date)
-    If Value <> mFechaHoraModificacion Then
+Public Property Let FechaHoraModificacion(ByVal value As Date)
+    If value <> mFechaHoraModificacion Then
         mIsDirty = True
     End If
-    mFechaHoraModificacion = Value
+    mFechaHoraModificacion = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -304,11 +390,11 @@ Public Property Get IDUsuarioModificacion() As String
     IDUsuarioModificacion = mIDUsuarioModificacion
 End Property
 
-Public Property Let IDUsuarioModificacion(ByVal Value As String)
-    If Value <> mIDUsuarioModificacion Then
+Public Property Let IDUsuarioModificacion(ByVal value As String)
+    If value <> mIDUsuarioModificacion Then
         mIsDirty = True
     End If
-    mIDUsuarioModificacion = Value
+    mIDUsuarioModificacion = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -337,8 +423,8 @@ Public Property Get NoMatchRaiseError() As Boolean
     NoMatchRaiseError = mNoMatchRaiseError
 End Property
 
-Public Property Let NoMatchRaiseError(ByVal Value As Boolean)
-    mNoMatchRaiseError = Value
+Public Property Let NoMatchRaiseError(ByVal value As Boolean)
+    mNoMatchRaiseError = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -348,8 +434,8 @@ Public Property Get RefreshListSkip() As Boolean
     RefreshListSkip = mRefreshListSkip
 End Property
 
-Public Property Let RefreshListSkip(ByVal Value As Boolean)
-    mRefreshListSkip = Value
+Public Property Let RefreshListSkip(ByVal value As Boolean)
+    mRefreshListSkip = value
 End Property
 
 Public Sub RefreshList()
@@ -363,8 +449,8 @@ Public Property Get Database() As CSC_Database_ADO_SQL
     Set Database = mDatabase
 End Property
 
-Public Property Set Database(ByRef Value As CSC_Database_ADO_SQL)
-    Set mDatabase = Value
+Public Property Set Database(ByRef value As CSC_Database_ADO_SQL)
+    Set mDatabase = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -383,7 +469,7 @@ Public Function OpenRecordset() As Boolean
     mrecData.LockType = adLockOptimistic
     mrecData.Source = "SELECT * FROM Horario"
     mrecData.Open , , , , adCmdText
-    mrecData.Properties("Update Criteria").Value = adCriteriaKey
+    mrecData.Properties("Update Criteria").value = adCriteriaKey
 
     Screen.MousePointer = vbDefault
     OpenRecordset = True
@@ -425,22 +511,40 @@ Public Function Load() As Boolean
         mNoMatch = False
         mIsNew = False
     
-        mDiaSemana = mrecData("DiaSemana").Value
-        mHora = Format(mrecData("Hora").Value, "Long Time")
-        mIDRuta = RTrim(mrecData("IDRuta").Value)
-        mIDConductor = Val(mrecData("IDConductor").Value & "")
-        mIDConductor2 = Val(mrecData("IDConductor2").Value & "")
-        mIDVehiculo = Val(mrecData("IDVehiculo").Value & "")
-        mConductorImporteTramoCompleto = IIf(IsNull(mrecData("ConductorImporteTramoCompleto").Value), -1, mrecData("ConductorImporteTramoCompleto").Value)
-        mConductorImporteTramo1 = IIf(IsNull(mrecData("ConductorImporteTramo1").Value), -1, mrecData("ConductorImporteTramo1").Value)
-        mConductorImporteTramo2 = IIf(IsNull(mrecData("ConductorImporteTramo2").Value), -1, mrecData("ConductorImporteTramo2").Value)
-        mNotas = mrecData("Notas").Value & ""
-        mActivo = mrecData("Activo").Value
-        mPersonal = mrecData("Personal").Value
-        mFechaHoraCreacion = mrecData("FechaHoraCreacion").Value
-        mIDUsuarioCreacion = mrecData("IDUsuarioCreacion").Value
-        mFechaHoraModificacion = mrecData("FechaHoraModificacion").Value
-        mIDUsuarioModificacion = mrecData("IDUsuarioModificacion").Value
+        mDiaSemana = mrecData("DiaSemana").value
+        mHora = Format(mrecData("Hora").value, "Long Time")
+        
+        mIDRuta = RTrim(mrecData("IDRuta").value)
+        Select Case mIDRuta
+            Case pParametro.Ruta_ID_Otra
+                mRutaOtra = mrecData("RutaOtra").value & ""
+                mIDPersona = Val(mrecData("IDPersona").value & "")
+                mImporte = IIf(IsNull(mrecData("Importe").value), 0, mrecData("Importe").value)
+            Case pParametro.Ruta_Paquete_ID
+                mRutaOtra = mrecData("RutaOtra").value & ""
+                mIDPersona = 0
+                mImporte = IIf(IsNull(mrecData("Importe").value), 0, mrecData("Importe").value)
+            Case Else
+                mRutaOtra = ""
+                mIDPersona = 0
+                mImporte = 0
+        End Select
+        mKilometro = Val(mrecData("Kilometro").value & "")
+        mDuracion = Val(mrecData("Duracion").value & "")
+            
+        mIDConductor = Val(mrecData("IDConductor").value & "")
+        mIDConductor2 = Val(mrecData("IDConductor2").value & "")
+        mIDVehiculo = Val(mrecData("IDVehiculo").value & "")
+        mConductorImporteTramoCompleto = IIf(IsNull(mrecData("ConductorImporteTramoCompleto").value), -1, mrecData("ConductorImporteTramoCompleto").value)
+        mConductorImporteTramo1 = IIf(IsNull(mrecData("ConductorImporteTramo1").value), -1, mrecData("ConductorImporteTramo1").value)
+        mConductorImporteTramo2 = IIf(IsNull(mrecData("ConductorImporteTramo2").value), -1, mrecData("ConductorImporteTramo2").value)
+        mNotas = mrecData("Notas").value & ""
+        mActivo = mrecData("Activo").value
+        mPersonal = mrecData("Personal").value
+        mFechaHoraCreacion = mrecData("FechaHoraCreacion").value
+        mIDUsuarioCreacion = mrecData("IDUsuarioCreacion").value
+        mFechaHoraModificacion = mrecData("FechaHoraModificacion").value
+        mIDUsuarioModificacion = mrecData("IDUsuarioModificacion").value
     End If
     
     Screen.MousePointer = vbDefault
@@ -492,24 +596,42 @@ Public Function Update() As Boolean
     If mIsNew Then
         mrecData.AddNew
     End If
-    mrecData("DiaSemana").Value = mDiaSemana
-    mrecData("Hora").Value = DATE_TIME_FIELD_NULL_VALUE & " " & mHora
-    mrecData("IDRuta").Value = mIDRuta
-    mrecData("IDConductor").Value = IIf(mIDConductor = 0, Null, mIDConductor)
-    mrecData("IDConductor2").Value = IIf(mIDConductor2 = 0, Null, mIDConductor2)
-    mrecData("IDVehiculo").Value = IIf(mIDVehiculo = 0, Null, mIDVehiculo)
-    mrecData("ConductorImporteTramoCompleto").Value = IIf(mConductorImporteTramoCompleto = -1, Null, mConductorImporteTramoCompleto)
-    mrecData("ConductorImporteTramo1").Value = IIf(mConductorImporteTramo1 = -1, Null, mConductorImporteTramo1)
-    mrecData("ConductorImporteTramo2").Value = IIf(mConductorImporteTramo2 = -1, Null, mConductorImporteTramo2)
-    mrecData("Notas").Value = IIf(Trim(mNotas) = "", Null, mNotas)
-    mrecData("Activo").Value = mActivo
-    mrecData("Personal").Value = mPersonal
+    mrecData("DiaSemana").value = mDiaSemana
+    mrecData("Hora").value = DATE_TIME_FIELD_NULL_VALUE & " " & mHora
+    
+    mrecData("IDRuta").value = mIDRuta
+    Select Case mIDRuta
+        Case pParametro.Ruta_ID_Otra
+            mrecData("RutaOtra").value = IIf(mRutaOtra = "", Null, mRutaOtra)
+            mrecData("IDPersona").value = IIf(mIDPersona = 0, Null, mIDPersona)
+            mrecData("Importe").value = IIf(mImporte = 0, Null, mImporte)
+        Case pParametro.Ruta_Paquete_ID
+            mrecData("RutaOtra").value = IIf(mRutaOtra = "", Null, mRutaOtra)
+            mrecData("IDPersona").value = Null
+            mrecData("Importe").value = IIf(mImporte = 0, Null, mImporte)
+        Case Else
+            mrecData("RutaOtra").value = Null
+            mrecData("IDPersona").value = Null
+            mrecData("Importe").value = Null
+    End Select
+    mrecData("Kilometro").value = IIf(mKilometro = 0, Null, mKilometro)
+    mrecData("Duracion").value = IIf(mDuracion = 0, Null, mDuracion)
+    
+    mrecData("IDConductor").value = IIf(mIDConductor = 0, Null, mIDConductor)
+    mrecData("IDConductor2").value = IIf(mIDConductor2 = 0, Null, mIDConductor2)
+    mrecData("IDVehiculo").value = IIf(mIDVehiculo = 0, Null, mIDVehiculo)
+    mrecData("ConductorImporteTramoCompleto").value = IIf(mConductorImporteTramoCompleto = -1, Null, mConductorImporteTramoCompleto)
+    mrecData("ConductorImporteTramo1").value = IIf(mConductorImporteTramo1 = -1, Null, mConductorImporteTramo1)
+    mrecData("ConductorImporteTramo2").value = IIf(mConductorImporteTramo2 = -1, Null, mConductorImporteTramo2)
+    mrecData("Notas").value = IIf(Trim(mNotas) = "", Null, mNotas)
+    mrecData("Activo").value = mActivo
+    mrecData("Personal").value = mPersonal
     If mIsNew Then
-        mrecData("FechaHoraCreacion").Value = mFechaHoraCreacion
-        mrecData("IDUsuarioCreacion").Value = pUsuario.IDUsuario
+        mrecData("FechaHoraCreacion").value = mFechaHoraCreacion
+        mrecData("IDUsuarioCreacion").value = pUsuario.IDUsuario
     End If
-    mrecData("FechaHoraModificacion").Value = Now
-    mrecData("IDUsuarioModificacion").Value = pUsuario.IDUsuario
+    mrecData("FechaHoraModificacion").value = Now
+    mrecData("IDUsuarioModificacion").value = pUsuario.IDUsuario
     mrecData.Update
 
     mIsNew = False
@@ -586,6 +708,11 @@ ErrorHandler:
 End Function
 
 Private Sub InitializeValues()
+    mRutaOtra = ""
+    mIDPersona = 0
+    mKilometro = 0
+    mDuracion = 0
+    mImporte = 0
     mIDConductor = 0
     mIDConductor2 = 0
     mIDVehiculo = 0

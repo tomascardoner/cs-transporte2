@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.OCX"
 Object = "{38911DA0-E448-11D0-84A3-00DD01104159}#1.1#0"; "COMCT332.OCX"
 Begin VB.Form frmConductorRuta 
    Caption         =   "Rutas del Conductor"
@@ -58,7 +58,7 @@ Begin VB.Form frmConductorRuta
       FixedOrder      =   -1  'True
       _CBWidth        =   10170
       _CBHeight       =   600
-      _Version        =   "6.7.9782"
+      _Version        =   "6.7.9816"
       Child1          =   "tlbMain"
       MinWidth1       =   4410
       MinHeight1      =   540
@@ -308,23 +308,23 @@ Public Function FillListView(ByVal IDPersona As Long, ByVal IDRuta As String) As
     With recData
         If Not .EOF Then
             Do While Not .EOF
-                Set ListItem = lvwData.ListItems.Add(, KEY_STRINGER & .Fields("IDPersona").Value & KEY_DELIMITER & RTrim(.Fields("IDRuta").Value), .Fields("Conductor").Value)
-                ListItem.SubItems(1) = RTrim(.Fields("IDRuta").Value)
-                If IsNull(.Fields("ConductorImporteTramoCompleto").Value) Then
+                Set ListItem = lvwData.ListItems.Add(, KEY_STRINGER & .Fields("IDPersona").value & KEY_DELIMITER & RTrim(.Fields("IDRuta").value), .Fields("Conductor").value)
+                ListItem.SubItems(1) = RTrim(.Fields("IDRuta").value)
+                If IsNull(.Fields("ConductorImporteTramoCompleto").value) Then
                     ListItem.SubItems(2) = " "
                 Else
-                    ListItem.SubItems(2) = Format(.Fields("ConductorImporteTramoCompleto").Value, "Currency")
+                    ListItem.SubItems(2) = Format(.Fields("ConductorImporteTramoCompleto").value, "Currency")
                 End If
                 If pParametro.Viaje_Permite_2_Conductores Then
-                    If .Fields("Permite2Conductores").Value = False Or IsNull(.Fields("ConductorImporteTramo1").Value) Then
+                    If .Fields("Permite2Conductores").value = False Or IsNull(.Fields("ConductorImporteTramo1").value) Then
                         ListItem.SubItems(3) = " "
                     Else
-                        ListItem.SubItems(3) = Format(.Fields("ConductorImporteTramo1").Value, "Currency")
+                        ListItem.SubItems(3) = Format(.Fields("ConductorImporteTramo1").value, "Currency")
                     End If
-                    If .Fields("Permite2Conductores").Value = False Or IsNull(.Fields("ConductorImporteTramo2").Value) Then
+                    If .Fields("Permite2Conductores").value = False Or IsNull(.Fields("ConductorImporteTramo2").value) Then
                         ListItem.SubItems(4) = " "
                     Else
-                        ListItem.SubItems(4) = Format(.Fields("ConductorImporteTramo2").Value, "Currency")
+                        ListItem.SubItems(4) = Format(.Fields("ConductorImporteTramo2").value, "Currency")
                     End If
                 End If
                 .MoveNext
@@ -407,8 +407,8 @@ Private Sub Form_Load()
     pParametro.GetCoolBarSettings "ConductorRuta", cbrMain
     pParametro.GetListViewSettings "ConductorRuta", lvwData
     lvwData.ColumnHeaders(lvwData.SortKey + 1).Icon = lvwData.SortOrder + 1
-    tlbPin.Buttons("PIN").Value = pParametro.Usuario_LeerNumero("ConductorRuta_Pin", tlbPin.Buttons("PIN").Value)
-    If tlbPin.Buttons("PIN").Value = tbrUnpressed Then
+    tlbPin.Buttons("PIN").value = pParametro.Usuario_LeerNumero("ConductorRuta_Pin", tlbPin.Buttons("PIN").value)
+    If tlbPin.Buttons("PIN").value = tbrUnpressed Then
         tlbPin.Buttons("PIN").Image = 1
     Else
         tlbPin.Buttons("PIN").Image = 2
@@ -433,7 +433,7 @@ Private Sub Form_Unload(Cancel As Integer)
     WindowState = vbNormal
     pParametro.SaveCoolBarSettings "ConductorRuta", cbrMain
     pParametro.SaveListViewSettings "ConductorRuta", lvwData
-    pParametro.Usuario_GuardarNumero "ConductorRuta_Pin", tlbPin.Buttons("PIN").Value
+    pParametro.Usuario_GuardarNumero "ConductorRuta_Pin", tlbPin.Buttons("PIN").value
     Set frmConductorRuta = Nothing
 End Sub
 
@@ -530,7 +530,7 @@ Private Sub tlbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
                 Screen.MousePointer = vbHourglass
                 Forms(FormIndex).ConductorRutaSelected Val(GetSubString(Mid(lvwData.SelectedItem.Key, Len(KEY_STRINGER) + 1), 1, KEY_DELIMITER)), CSM_String.GetSubString(Mid(lvwData.SelectedItem.Key, Len(KEY_STRINGER) + 1), 2, KEY_DELIMITER)
                 Forms(FormIndex).SetFocus
-                If tlbPin.Buttons("PIN").Value = tbrUnpressed Then
+                If tlbPin.Buttons("PIN").value = tbrUnpressed Then
                     Unload Me
                 End If
                 Screen.MousePointer = vbDefault
@@ -540,7 +540,7 @@ Private Sub tlbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
 End Sub
 
 Private Sub tlbPin_ButtonClick(ByVal Button As MSComctlLib.Button)
-    If Button.Value = tbrUnpressed Then
+    If Button.value = tbrUnpressed Then
         Button.Image = 1
     Else
         Button.Image = 2
@@ -567,5 +567,5 @@ Public Sub FillComboBoxConductor()
     If cboConductor.ListCount > 0 Then
         KeySave = cboConductor.ItemData(cboConductor.ListIndex)
     End If
-    Call CSM_Control_ComboBox.FillFromSQL(cboConductor, "(SELECT 0 AS IDPersona, '<Todos>' AS ApellidoNombre, 1 AS Orden) UNION (SELECT IDPersona, Apellido + ', ' + Nombre AS ApellidoNombre, 2 AS Orden FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrfirst, KeySave)
+    Call CSM_Control_ComboBox.FillFromSQL(cboConductor, "(SELECT 0 AS IDPersona, '<Todos>' AS ApellidoNombre, 1 AS Orden) UNION (SELECT IDPersona, dbo.udf_GetEntidadApellidoYNombre(Apellido, Nombre) AS ApellidoNombre, 2 AS Orden FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, KeySave)
 End Sub

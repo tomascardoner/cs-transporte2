@@ -253,7 +253,7 @@ Public Sub LoadDataAndShow(ByRef ParentForm As Form, ByRef ConductorRuta As Cond
     CSM_Forms.CenterToParent ParentForm, Me
     
     With mConductorRuta
-        If Not CSM_Control_DataCombo.FillFromSQL(datcboConductor, "SELECT IDPersona, Apellido + ', ' + Nombre AS ApellidoNombre FROM Persona WHERE (Activo = 1 OR IDPersona = " & .IDPersona & ") AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "' ORDER BY ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrNone, .IDPersona) Then
+        If Not CSM_Control_DataCombo.FillFromSQL(datcboConductor, "SELECT IDPersona, dbo.udf_GetEntidadApellidoYNombre(Apellido, Nombre) AS ApellidoNombre FROM Persona WHERE (Activo = 1 OR IDPersona = " & .IDPersona & ") AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "' ORDER BY ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrNone, .IDPersona) Then
             Unload Me
             Exit Sub
         End If

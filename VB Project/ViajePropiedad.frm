@@ -280,7 +280,7 @@ Begin VB.Form frmViajePropiedad
          Strikethrough   =   0   'False
       EndProperty
       CustomFormat    =   "HH:mm"
-      Format          =   108199939
+      Format          =   119668739
       UpDown          =   -1  'True
       CurrentDate     =   36494
    End
@@ -345,7 +345,7 @@ Begin VB.Form frmViajePropiedad
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   108199937
+      Format          =   119668737
       CurrentDate     =   36950
    End
    Begin VB.CommandButton cmdSiguiente 
@@ -898,14 +898,14 @@ Public Sub LoadDataAndShow(ByRef ParentForm As Form, ByRef Viaje As Viaje)
             Exit Sub
         End If
         
-        If Not CSM_Control_DataCombo.FillFromSQL(datcboConductor, "(SELECT -1 AS IDPersona, '------------------' AS ApellidoNombre, 1 AS Orden FROM Persona) UNION (SELECT IDPersona, Apellido + ', ' + Nombre AS ApellidoNombre, 2 AS Orden FROM Persona WHERE (Activo = 1 OR IDPersona = " & .IDConductor & ") AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, .IDConductor) Then
+        If Not CSM_Control_DataCombo.FillFromSQL(datcboConductor, "(SELECT -1 AS IDPersona, '------------------' AS ApellidoNombre, 1 AS Orden FROM Persona) UNION (SELECT IDPersona, dbo.udf_GetEntidadApellidoYNombre(Apellido, Nombre) AS ApellidoNombre, 2 AS Orden FROM Persona WHERE (Activo = 1 OR IDPersona = " & .IDConductor & ") AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, .IDConductor) Then
             Unload Me
             Exit Sub
         End If
         chkAcreditaSueldo.value = IIf(.AcreditaSueldo, vbChecked, vbUnchecked)
         
         If pParametro.Viaje_Permite_2_Conductores Then
-            If Not CSM_Control_DataCombo.FillFromSQL(datcboConductor2, "(SELECT -1 AS IDPersona, '------------------' AS ApellidoNombre, 1 AS Orden FROM Persona) UNION (SELECT IDPersona, Apellido + ', ' + Nombre AS ApellidoNombre, 2 AS Orden FROM Persona WHERE (Activo = 1 OR IDPersona = " & .IDConductor2 & ") AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, IIf(mPermite2Conductores, .IDConductor2, -1)) Then
+            If Not CSM_Control_DataCombo.FillFromSQL(datcboConductor2, "(SELECT -1 AS IDPersona, '------------------' AS ApellidoNombre, 1 AS Orden FROM Persona) UNION (SELECT IDPersona, dbo.udf_GetEntidadApellidoYNombre(Apellido, Nombre) AS ApellidoNombre, 2 AS Orden FROM Persona WHERE (Activo = 1 OR IDPersona = " & .IDConductor2 & ") AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, IIf(mPermite2Conductores, .IDConductor2, -1)) Then
                 Unload Me
                 Exit Sub
             End If
@@ -1239,13 +1239,13 @@ Private Sub cmdOK_Click()
             Exit Sub
         End If
     End If
-    If CCur(txtImporte.Text) < 0 Then
-        MsgBox "El Importe debe ser mayor o igual a cero.", vbInformation, App.Title
+    If Not IsNumeric(txtImporte.Text) Then
+        MsgBox "El Importe ingresado es incorrecto.", vbInformation, App.Title
         txtImporte.SetFocus
         Exit Sub
     End If
-    If Not IsNumeric(txtImporte.Text) Then
-        MsgBox "El Importe ingresado es incorrecto.", vbInformation, App.Title
+    If CCur(txtImporte.Text) < 0 Then
+        MsgBox "El Importe debe ser mayor o igual a cero.", vbInformation, App.Title
         txtImporte.SetFocus
         Exit Sub
     End If

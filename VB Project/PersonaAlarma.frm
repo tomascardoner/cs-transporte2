@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.OCX"
 Object = "{38911DA0-E448-11D0-84A3-00DD01104159}#1.1#0"; "COMCT332.OCX"
 Begin VB.Form frmPersonaAlarma 
    Caption         =   "Alarmas de Personas"
@@ -49,7 +49,7 @@ Begin VB.Form frmPersonaAlarma
       FixedOrder      =   -1  'True
       _CBWidth        =   9195
       _CBHeight       =   630
-      _Version        =   "6.7.9782"
+      _Version        =   "6.7.9816"
       Child1          =   "tlbMain"
       MinWidth1       =   4410
       MinHeight1      =   570
@@ -277,15 +277,15 @@ Public Sub FillListView(ByVal IDPersona As Long, ByVal IDPersonaAlarmaGrupo As L
     End If
     
     Set recData = New ADODB.Recordset
-    recData.Source = "SELECT PersonaAlarma.IDPersona, Persona.Apellido + ', ' + ISNULL(Persona.Nombre, '') AS Persona, PersonaAlarma.IDPersonaAlarmaGrupo, PersonaAlarmaGrupo.Nombre AS PersonaAlarmaGrupo, PersonaAlarma.Activo FROM (PersonaAlarma INNER JOIN Persona ON PersonaAlarma.IDPersona = Persona.IDPersona) INNER JOIN PersonaAlarmaGrupo ON PersonaAlarma.IDPersonaAlarmaGrupo = PersonaAlarmaGrupo.IDPersonaAlarmaGrupo" & SQL_Where
+    recData.Source = "SELECT PersonaAlarma.IDPersona, dbo.udf_GetEntidadApellidoYNombre(Persona.Apellido, Persona.Nombre) AS Persona, PersonaAlarma.IDPersonaAlarmaGrupo, PersonaAlarmaGrupo.Nombre AS PersonaAlarmaGrupo, PersonaAlarma.Activo FROM (PersonaAlarma INNER JOIN Persona ON PersonaAlarma.IDPersona = Persona.IDPersona) INNER JOIN PersonaAlarmaGrupo ON PersonaAlarma.IDPersonaAlarmaGrupo = PersonaAlarmaGrupo.IDPersonaAlarmaGrupo" & SQL_Where
     recData.Open , pDatabase.Connection, adOpenForwardOnly, adLockReadOnly, adCmdText
     
     With recData
         If Not .EOF Then
             Do While Not .EOF
-                Set ListItem = lvwData.ListItems.Add(, KEY_STRINGER & .Fields("IDPersona").Value & KEY_DELIMITER & .Fields("IDPersonaAlarmaGrupo").Value, .Fields("Persona").Value)
-                ListItem.SubItems(1) = .Fields("PersonaAlarmaGrupo").Value
-                ListItem.SubItems(2) = GetBooleanString(.Fields("Activo").Value)
+                Set ListItem = lvwData.ListItems.Add(, KEY_STRINGER & .Fields("IDPersona").value & KEY_DELIMITER & .Fields("IDPersonaAlarmaGrupo").value, .Fields("Persona").value)
+                ListItem.SubItems(1) = .Fields("PersonaAlarmaGrupo").value
+                ListItem.SubItems(2) = GetBooleanString(.Fields("Activo").value)
                 .MoveNext
             Loop
             
@@ -368,8 +368,8 @@ Private Sub Form_Load()
     pParametro.GetCoolBarSettings "PersonaAlarma", cbrMain
     pParametro.GetListViewSettings "PersonaAlarma", lvwData
     lvwData.ColumnHeaders(lvwData.SortKey + 1).Icon = lvwData.SortOrder + 1
-    tlbPin.Buttons("PIN").Value = pParametro.Usuario_LeerNumero("PersonaAlarma_Pin", tlbPin.Buttons("PIN").Value)
-    If tlbPin.Buttons("PIN").Value = tbrUnpressed Then
+    tlbPin.Buttons("PIN").value = pParametro.Usuario_LeerNumero("PersonaAlarma_Pin", tlbPin.Buttons("PIN").value)
+    If tlbPin.Buttons("PIN").value = tbrUnpressed Then
         tlbPin.Buttons("PIN").Image = 1
     Else
         tlbPin.Buttons("PIN").Image = 2
@@ -389,7 +389,7 @@ Private Sub Form_Unload(Cancel As Integer)
     WindowState = vbNormal
     pParametro.SaveCoolBarSettings "PersonaAlarma", cbrMain
     pParametro.SaveListViewSettings "PersonaAlarma", lvwData
-    pParametro.Usuario_GuardarNumero "PersonaAlarma_Pin", tlbPin.Buttons("PIN").Value
+    pParametro.Usuario_GuardarNumero "PersonaAlarma_Pin", tlbPin.Buttons("PIN").value
     Set frmPersonaAlarma = Nothing
 End Sub
 
@@ -490,7 +490,7 @@ Private Sub tlbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
                 Screen.MousePointer = vbHourglass
                 Forms(FormIndex).PersonaAlarmaSelected Val(GetSubString(Mid(lvwData.SelectedItem.Key, Len(KEY_STRINGER) + 1), 1, KEY_DELIMITER)), Val(GetSubString(Mid(lvwData.SelectedItem.Key, Len(KEY_STRINGER) + 1), 2, KEY_DELIMITER))
                 Forms(FormIndex).SetFocus
-                If tlbPin.Buttons("PIN").Value = tbrUnpressed Then
+                If tlbPin.Buttons("PIN").value = tbrUnpressed Then
                     Unload Me
                 End If
                 Screen.MousePointer = vbDefault
@@ -502,7 +502,7 @@ Private Sub tlbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
 End Sub
 
 Private Sub tlbPin_ButtonClick(ByVal Button As MSComctlLib.Button)
-    If Button.Value = tbrUnpressed Then
+    If Button.value = tbrUnpressed Then
         Button.Image = 1
     Else
         Button.Image = 2

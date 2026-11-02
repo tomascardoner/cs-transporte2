@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.OCX"
 Object = "{38911DA0-E448-11D0-84A3-00DD01104159}#1.1#0"; "COMCT332.OCX"
 Begin VB.Form frmViajeAsistencia 
    Caption         =   "Asistencia de Viajes"
@@ -91,7 +91,7 @@ Begin VB.Form frmViajeAsistencia
       FixedOrder      =   -1  'True
       _CBWidth        =   11010
       _CBHeight       =   630
-      _Version        =   "6.7.9782"
+      _Version        =   "6.7.9816"
       Child1          =   "tlbMain"
       MinWidth1       =   4995
       MinHeight1      =   570
@@ -590,7 +590,7 @@ Public Function FillListViewViaje(Optional RefreshViajeDetalle As Boolean = True
         Case 4  'VEHICULO
             SQL_OrderBy = " ORDER BY Vehiculo.Nombre" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC") & ", datepart(weekday, Viaje.FechaHora)" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC") & ", Viaje.FechaHora" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC") & ", Viaje.IDRuta + ': ' + Viaje.RutaOtra" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC")
         Case 5  'CONDUCTOR
-            SQL_OrderBy = " ORDER BY Persona.Apellido + ', ' + Persona.Nombre" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC") & ", datepart(weekday, Viaje.FechaHora)" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC") & ", Viaje.FechaHora" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC") & ", Viaje.IDRuta + ': ' + Viaje.RutaOtra" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC")
+            SQL_OrderBy = " ORDER BY dbo.udf_GetEntidadApellidoYNombre(Persona.Apellido, Persona.Nombre)" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC") & ", datepart(weekday, Viaje.FechaHora)" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC") & ", Viaje.FechaHora" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC") & ", Viaje.IDRuta + ': ' + Viaje.RutaOtra" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC")
         Case 6  'ESTADO
             SQL_OrderBy = " ORDER BY Viaje.Estado" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC") & ", datepart(weekday, Viaje.FechaHora)" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC") & ", Viaje.FechaHora" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC") & ", Viaje.IDRuta + ': ' + Viaje.RutaOtra" & IIf(lvwViaje.SortOrder = lvwAscending, "", " DESC")
         Case 7  'ASIENTO LIBRE
@@ -604,25 +604,25 @@ Public Function FillListViewViaje(Optional RefreshViajeDetalle As Boolean = True
     lvwViaje.ListItems.Clear
     
     Set recData = New ADODB.Recordset
-    recData.Source = "SELECT Viaje.FechaHora, Viaje.IDRuta, Viaje.RutaOtra, Viaje.Estado, Vehiculo.Asiento - Viaje.AsientoOcupado AS AsientoLibre, Vehiculo.Nombre AS Vehiculo, Persona.Apellido + ', ' + Persona.Nombre AS Conductor, Viaje.Notas FROM (Viaje LEFT JOIN Vehiculo ON Viaje.IDVehiculo = Vehiculo.IDVehiculo) LEFT JOIN Persona ON Viaje.IDConductor = Persona.IDPersona" & SQL_Where & SQL_OrderBy
+    recData.Source = "SELECT Viaje.FechaHora, Viaje.IDRuta, Viaje.RutaOtra, Viaje.Estado, Vehiculo.Asiento - Viaje.AsientoOcupado AS AsientoLibre, Vehiculo.Nombre AS Vehiculo, dbo.udf_GetEntidadApellidoYNombre(Persona.Apellido, Persona.Nombre) AS Conductor, Viaje.Notas FROM (Viaje LEFT JOIN Vehiculo ON Viaje.IDVehiculo = Vehiculo.IDVehiculo) LEFT JOIN Persona ON Viaje.IDConductor = Persona.IDPersona" & SQL_Where & SQL_OrderBy
     recData.MaxRecords = pParametro.Recordset_MaxRecords
     recData.Open , pDatabase.Connection, adOpenForwardOnly, adLockReadOnly, adCmdText
     
     With recData
         If Not .EOF Then
             Do While Not .EOF
-                Set ListItem = lvwViaje.ListItems.Add(, KEY_STRINGER & .Fields("FechaHora").Value & KEY_DELIMITER & RTrim(.Fields("IDRuta").Value), WeekdayName(Weekday(.Fields("FechaHora").Value)))
-                ListItem.SubItems(1) = Format(.Fields("FechaHora").Value, "Short Date")
-                ListItem.SubItems(2) = Format(.Fields("FechaHora").Value, "Short Time")
-                ListItem.SubItems(3) = RTrim(.Fields("IDRuta").Value) & IIf(RTrim(.Fields("IDRuta").Value) = pParametro.Ruta_ID_Otra, ": " & .Fields("RutaOtra").Value, "")
-                ListItem.SubItems(4) = .Fields("Vehiculo").Value & ""
-                ListItem.SubItems(5) = .Fields("Conductor").Value & ""
-                Viaje.Estado = .Fields("Estado").Value
+                Set ListItem = lvwViaje.ListItems.Add(, KEY_STRINGER & .Fields("FechaHora").value & KEY_DELIMITER & RTrim(.Fields("IDRuta").value), WeekdayName(Weekday(.Fields("FechaHora").value)))
+                ListItem.SubItems(1) = Format(.Fields("FechaHora").value, "Short Date")
+                ListItem.SubItems(2) = Format(.Fields("FechaHora").value, "Short Time")
+                ListItem.SubItems(3) = RTrim(.Fields("IDRuta").value) & IIf(RTrim(.Fields("IDRuta").value) = pParametro.Ruta_ID_Otra, ": " & .Fields("RutaOtra").value, "")
+                ListItem.SubItems(4) = .Fields("Vehiculo").value & ""
+                ListItem.SubItems(5) = .Fields("Conductor").value & ""
+                Viaje.Estado = .Fields("Estado").value
                 ListItem.SubItems(6) = Viaje.Estado_ToString
-                ListItem.SubItems(7) = .Fields("AsientoLibre").Value & ""
-                ListItem.SubItems(8) = .Fields("Notas").Value & ""
+                ListItem.SubItems(7) = .Fields("AsientoLibre").value & ""
+                ListItem.SubItems(8) = .Fields("Notas").value & ""
                 
-                If RTrim(.Fields("IDRuta").Value) = pParametro.Ruta_ID_Otra Then
+                If RTrim(.Fields("IDRuta").value) = pParametro.Ruta_ID_Otra Then
                     ListItem.Bold = pParametro.Viaje_Especial_Bold
                     ListItem.ForeColor = pParametro.Viaje_Especial_Color
                 Else
@@ -727,9 +727,9 @@ RESTART:
         Case 0  'ORDEN
             SQL_OrderBy = " ORDER BY ViajeDetalle.OcupanteTipo DESC, ViajeDetalle.Estado, ViajeDetalle.Orden" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC")
         Case 1  'PERSONA
-            SQL_OrderBy = " ORDER BY ViajeDetalle.OcupanteTipo DESC, ViajeDetalle.Estado, Persona.Apellido + ', ' + Persona.Nombre" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC") & ", ViajeDetalle.Orden" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC")
+            SQL_OrderBy = " ORDER BY ViajeDetalle.OcupanteTipo DESC, ViajeDetalle.Estado, dbo.udf_GetEntidadApellidoYNombre(Persona.Apellido, Persona.Nombre)" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC") & ", ViajeDetalle.Orden" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC")
         Case 2  'DOCUMENTO
-            SQL_OrderBy = " ORDER BY ViajeDetalle.OcupanteTipo DESC, Persona.IDDocumentoTipo + Persona.DocumentoNumero" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC") & ", Persona.Apellido + ', ' + Persona.Nombre" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC") & ", ViajeDetalle.Orden" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC")
+            SQL_OrderBy = " ORDER BY ViajeDetalle.OcupanteTipo DESC, Persona.IDDocumentoTipo + Persona.DocumentoNumero" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC") & ", dbo.udf_GetEntidadApellidoYNombre(Persona.Apellido, Persona.Nombre)" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC") & ", ViajeDetalle.Orden" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC")
         Case 3  'IMPORTE
             SQL_OrderBy = " ORDER BY ViajeDetalle.OcupanteTipo DESC, ViajeDetalle.Importe" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC") & ", ViajeDetalle.Orden" & IIf(lvwViajeDetalle.SortOrder = lvwAscending, "", " DESC")
         Case 4  'IMPORTE PAGADO
@@ -761,7 +761,7 @@ RESTART:
     lvwViajeDetalle.ListItems.Clear
     Set recData = New ADODB.Recordset
     recData.Source = "SELECT ViajeDetalle.FechaHora, ViajeDetalle.IDRuta, ViajeDetalle.Indice, ViajeDetalle.OcupanteTipo, ViajeDetalle.Estado, ViajeDetalle.Asiento, ViajeDetalle.Realizado, ViajeDetalle.Orden, Persona.Apellido + (CASE ISNULL(Persona.Nombre, '') WHEN '' THEN '' ELSE ', ' + Persona.Nombre END) AS Persona, Persona.IDDocumentoTipo, Persona.DocumentoNumero, ViajeDetalle.Importe, ViajeDetalle.ImporteContado + ViajeDetalle.ImporteCuentaCorriente AS ImportePagado, ViajeDetalle.Importe - ViajeDetalle.ImporteContado - ViajeDetalle.ImporteCuentaCorriente AS Debe, Lugar_Origen.Nombre AS Origen, ViajeDetalle.Sube, Lugar_Destino.Nombre AS Destino, ViajeDetalle.Baja, ViajeDetalle.ReservaTipo, ViajeDetalle.Facturar, ViajeDetalle.Notas, Persona.ListaPasajero, ViajeDetalle.CreadoEnProgreso, ViajeDetalle.ModificadoEnProgreso"
-    recData.Source = recData.Source & IIf(chkMostrarSaldo.Value = vbChecked, ", (SELECT Sum(Importe) AS SaldoActual FROM CuentaCorriente WHERE CuentaCorriente.IDPersona = (CASE isnull(ViajeDetalle.IDPersonaCuentaCorriente, 0) WHEN 0 THEN ViajeDetalle.IDPersona ELSE ViajeDetalle.IDPersonaCuentaCorriente END)) AS SaldoActual", "") & " "
+    recData.Source = recData.Source & IIf(chkMostrarSaldo.value = vbChecked, ", (SELECT Sum(Importe) AS SaldoActual FROM CuentaCorriente WHERE CuentaCorriente.IDPersona = (CASE isnull(ViajeDetalle.IDPersonaCuentaCorriente, 0) WHEN 0 THEN ViajeDetalle.IDPersona ELSE ViajeDetalle.IDPersonaCuentaCorriente END)) AS SaldoActual", "") & " "
     recData.Source = recData.Source & "FROM ((ViajeDetalle INNER JOIN Persona ON ViajeDetalle.IDPersona = Persona.IDPersona) INNER JOIN Lugar AS Lugar_Origen ON ViajeDetalle.IDOrigen = Lugar_Origen.IDLugar) INNER JOIN Lugar AS Lugar_Destino ON ViajeDetalle.IDDestino = Lugar_Destino.IDLugar" & SQL_Where & SQL_OrderBy
     recData.Open , pDatabase.Connection, adOpenForwardOnly, adLockReadOnly, adCmdText
     
@@ -770,7 +770,7 @@ RESTART:
     With recData
         If Not .EOF Then
             Do While Not .EOF
-                Select Case .Fields("Estado").Value
+                Select Case .Fields("Estado").value
                     Case VIAJE_DETALLE_ESTADO_CONFIRMADO
                         EstadoKey = "CONFIRMADO"
                     Case VIAJE_DETALLE_ESTADO_CONDICIONAL
@@ -784,72 +784,72 @@ RESTART:
                 '//////////////////////////////////////////////////
                 'ROWS SEPARATOR BY TYPE
                 If pParametro.ViajeDetalle_SeparateRowsByType Then
-                    If UltimoTipo <> .Fields("OcupanteTipo").Value Then
+                    If UltimoTipo <> .Fields("OcupanteTipo").value Then
                         If UltimoTipo <> "" Then
-                            Set ListItem = lvwViajeDetalle.ListItems.Add(, KEY_STRINGER & (.Fields("Indice").Value * -1), "")
+                            Set ListItem = lvwViajeDetalle.ListItems.Add(, KEY_STRINGER & (.Fields("Indice").value * -1), "")
                         End If
-                        UltimoTipo = .Fields("OcupanteTipo").Value
+                        UltimoTipo = .Fields("OcupanteTipo").value
                     End If
                 End If
                 '//////////////////////////////////////////////////
                 'ROWS SEPARATOR BY STATUS
-                If .Fields("OcupanteTipo").Value = OCUPANTE_TIPO_PASAJERO Then
+                If .Fields("OcupanteTipo").value = OCUPANTE_TIPO_PASAJERO Then
                     If pParametro.ViajeDetalle_SeparateRowsByStatus Then
-                        If UltimoEstadoPersona <> .Fields("Estado").Value And (lvwViajeDetalle.SortKey = 0 Or lvwViajeDetalle.SortKey = 1 Or lvwViajeDetalle.SortKey = 6) Then
+                        If UltimoEstadoPersona <> .Fields("Estado").value And (lvwViajeDetalle.SortKey = 0 Or lvwViajeDetalle.SortKey = 1 Or lvwViajeDetalle.SortKey = 6) Then
                             If UltimoEstadoPersona <> "" Then
-                                Set ListItem = lvwViajeDetalle.ListItems.Add(, KEY_STRINGER & (.Fields("Indice").Value * -1), "")
+                                Set ListItem = lvwViajeDetalle.ListItems.Add(, KEY_STRINGER & (.Fields("Indice").value * -1), "")
                             End If
-                            UltimoEstadoPersona = .Fields("Estado").Value
+                            UltimoEstadoPersona = .Fields("Estado").value
                         End If
                     End If
                 Else
                     If pParametro.ViajeDetalle_SeparateRowsByStatus Then
-                        If UltimoEstadoComision <> .Fields("Estado").Value And (lvwViajeDetalle.SortKey = 0 Or lvwViajeDetalle.SortKey = 6) Then
+                        If UltimoEstadoComision <> .Fields("Estado").value And (lvwViajeDetalle.SortKey = 0 Or lvwViajeDetalle.SortKey = 6) Then
                             If UltimoEstadoComision <> "" Then
-                                Set ListItem = lvwViajeDetalle.ListItems.Add(, KEY_STRINGER & (.Fields("Indice").Value * -1), "")
+                                Set ListItem = lvwViajeDetalle.ListItems.Add(, KEY_STRINGER & (.Fields("Indice").value * -1), "")
                             End If
-                            UltimoEstadoComision = .Fields("Estado").Value
+                            UltimoEstadoComision = .Fields("Estado").value
                         End If
                     End If
                 End If
                 
-                Select Case .Fields("OcupanteTipo").Value
+                Select Case .Fields("OcupanteTipo").value
                     Case OCUPANTE_TIPO_PASAJERO
                         'Pasajero
-                        Set ListItem = lvwViajeDetalle.ListItems.Add(, KEY_STRINGER & .Fields("FechaHora").Value & KEY_DELIMITER & RTrim(.Fields("IDRuta").Value) & KEY_DELIMITER & .Fields("Indice").Value, .Fields("Orden").Value, , "PASAJERO_" & EstadoKey)
-                        If .Fields("Estado").Value = VIAJE_DETALLE_ESTADO_CONFIRMADO Then
-                            ListItem.SubItems(9) = IIf(IsNull(.Fields("Realizado").Value), "", IIf(.Fields("Realizado").Value, "Sí", "No"))
+                        Set ListItem = lvwViajeDetalle.ListItems.Add(, KEY_STRINGER & .Fields("FechaHora").value & KEY_DELIMITER & RTrim(.Fields("IDRuta").value) & KEY_DELIMITER & .Fields("Indice").value, .Fields("Orden").value, , "PASAJERO_" & EstadoKey)
+                        If .Fields("Estado").value = VIAJE_DETALLE_ESTADO_CONFIRMADO Then
+                            ListItem.SubItems(9) = IIf(IsNull(.Fields("Realizado").value), "", IIf(.Fields("Realizado").value, "Sí", "No"))
                         End If
                     Case OCUPANTE_TIPO_COMISION
                         'Comisión
-                        Set ListItem = lvwViajeDetalle.ListItems.Add(, KEY_STRINGER & .Fields("FechaHora").Value & KEY_DELIMITER & RTrim(.Fields("IDRuta").Value) & KEY_DELIMITER & .Fields("Indice").Value, .Fields("Orden").Value, , "COMISION_" & EstadoKey)
+                        Set ListItem = lvwViajeDetalle.ListItems.Add(, KEY_STRINGER & .Fields("FechaHora").value & KEY_DELIMITER & RTrim(.Fields("IDRuta").value) & KEY_DELIMITER & .Fields("Indice").value, .Fields("Orden").value, , "COMISION_" & EstadoKey)
                 End Select
-                ListItem.SubItems(1) = .Fields("Persona").Value
-                ListItem.SubItems(2) = IIf(IsNull(.Fields("DocumentoNumero").Value), "", IIf(IsNull(.Fields("IDDocumentoTipo").Value), .Fields("DocumentoNumero").Value, RTrim(.Fields("IDDocumentoTipo").Value) & ": " & .Fields("DocumentoNumero").Value))
-                ListItem.SubItems(3) = Format(.Fields("Importe").Value, "Currency")
-                ListItem.SubItems(4) = Format(.Fields("ImportePagado").Value, "Currency")
-                ListItem.SubItems(5) = Format(.Fields("Debe").Value, "Currency")
-                If chkMostrarSaldo.Value = vbChecked Then
-                    ListItem.SubItems(6) = IIf(IsNull(.Fields("SaldoActual").Value), " ", Format(.Fields("SaldoActual").Value, "Currency"))
+                ListItem.SubItems(1) = .Fields("Persona").value
+                ListItem.SubItems(2) = IIf(IsNull(.Fields("DocumentoNumero").value), "", IIf(IsNull(.Fields("IDDocumentoTipo").value), .Fields("DocumentoNumero").value, RTrim(.Fields("IDDocumentoTipo").value) & ": " & .Fields("DocumentoNumero").value))
+                ListItem.SubItems(3) = Format(.Fields("Importe").value, "Currency")
+                ListItem.SubItems(4) = Format(.Fields("ImportePagado").value, "Currency")
+                ListItem.SubItems(5) = Format(.Fields("Debe").value, "Currency")
+                If chkMostrarSaldo.value = vbChecked Then
+                    ListItem.SubItems(6) = IIf(IsNull(.Fields("SaldoActual").value), " ", Format(.Fields("SaldoActual").value, "Currency"))
                 Else
                     ListItem.SubItems(6) = " "
                 End If
-                ViajeDetalle.Estado = .Fields("Estado").Value & ""
+                ViajeDetalle.Estado = .Fields("Estado").value & ""
                 ListItem.SubItems(7) = ViajeDetalle.Estado_ToString
-                ListItem.SubItems(8) = .Fields("Asiento").Value & ""
-                ListItem.SubItems(10) = IIf(IsNull(.Fields("Sube").Value), .Fields("Origen").Value, .Fields("Sube").Value)
-                ListItem.SubItems(11) = IIf(IsNull(.Fields("Baja").Value), .Fields("Destino").Value, .Fields("Baja").Value)
-                ViajeDetalle.ReservaTipo = .Fields("ReservaTipo").Value
+                ListItem.SubItems(8) = .Fields("Asiento").value & ""
+                ListItem.SubItems(10) = IIf(IsNull(.Fields("Sube").value), .Fields("Origen").value, .Fields("Sube").value)
+                ListItem.SubItems(11) = IIf(IsNull(.Fields("Baja").value), .Fields("Destino").value, .Fields("Baja").value)
+                ViajeDetalle.ReservaTipo = .Fields("ReservaTipo").value
                 ListItem.SubItems(12) = ViajeDetalle.ReservaTipo_ToString
-                ListItem.SubItems(13) = IIf(.Fields("Facturar").Value, "Sí", "No")
-                ListItem.SubItems(14) = .Fields("Notas").Value & ""
-                ListItem.SubItems(15) = IIf(.Fields("ListaPasajero").Value, "Sí", "")
+                ListItem.SubItems(13) = IIf(.Fields("Facturar").value, "Sí", "No")
+                ListItem.SubItems(14) = .Fields("Notas").value & ""
+                ListItem.SubItems(15) = IIf(.Fields("ListaPasajero").value, "Sí", "")
                 
-                If .Fields("CreadoEnProgreso").Value Then
+                If .Fields("CreadoEnProgreso").value Then
                    ListItem.ForeColor = pParametro.ViajeDetalle_CreadoEnProgreso_Color
                    ListItem.Bold = True
                 End If
-                If .Fields("ModificadoEnProgreso").Value Then
+                If .Fields("ModificadoEnProgreso").value Then
                    ListItem.ForeColor = pParametro.ViajeDetalle_ModificadoEnProgreso_Color
                    ListItem.Bold = True
                 End If
@@ -977,8 +977,8 @@ Private Sub Form_Load()
     pParametro.GetListViewSettings "ViajeDetalle", lvwViajeDetalle
     lvwViajeDetalle.ColumnHeaders(lvwViajeDetalle.SortKey + 1).Icon = lvwViajeDetalle.SortOrder + 1
     
-    tlbPin.Buttons("PIN").Value = pParametro.Usuario_LeerNumero("ViajeAsistencia_Pin", tlbPin.Buttons("PIN").Value)
-    If tlbPin.Buttons("PIN").Value = tbrUnpressed Then
+    tlbPin.Buttons("PIN").value = pParametro.Usuario_LeerNumero("ViajeAsistencia_Pin", tlbPin.Buttons("PIN").value)
+    If tlbPin.Buttons("PIN").value = tbrUnpressed Then
         tlbPin.Buttons("PIN").Image = 1
     Else
         tlbPin.Buttons("PIN").Image = 2
@@ -999,7 +999,7 @@ Private Sub Form_Unload(Cancel As Integer)
     pParametro.SaveListViewSettings "Viaje", lvwViaje
     pParametro.SaveListViewSettings "ViajeDetalle", lvwViajeDetalle
     
-    pParametro.Usuario_GuardarNumero "ViajeAsistencia_Pin", tlbPin.Buttons("PIN").Value
+    pParametro.Usuario_GuardarNumero "ViajeAsistencia_Pin", tlbPin.Buttons("PIN").value
     Set mCViaje = Nothing
     Set frmViajeDetalle = Nothing
 End Sub
@@ -1331,7 +1331,7 @@ Private Sub tlbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
 End Sub
 
 Private Sub tlbPin_ButtonClick(ByVal Button As MSComctlLib.Button)
-    If Button.Value = tbrUnpressed Then
+    If Button.value = tbrUnpressed Then
         Button.Image = 1
     Else
         Button.Image = 2

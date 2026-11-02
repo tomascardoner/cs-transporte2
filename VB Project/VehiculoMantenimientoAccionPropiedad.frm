@@ -324,7 +324,7 @@ Begin VB.Form frmVehiculoMantenimientoAccionPropiedad
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   16711681
+      Format          =   119668737
       CurrentDate     =   36950
    End
    Begin MSComCtl2.DTPicker dtpHora 
@@ -345,7 +345,7 @@ Begin VB.Form frmVehiculoMantenimientoAccionPropiedad
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   16711682
+      Format          =   119668738
       CurrentDate     =   36494
    End
    Begin MSDataListLib.DataCombo datcboConductor 
@@ -586,17 +586,17 @@ Public Sub LoadDataAndShow(ByRef ParentForm As Form, ByRef VehiculoMantenimiento
             Exit Sub
         End If
         
-        If Not CSM_Control_DataCombo.FillFromSQL(datcboConductor, "(SELECT 0 AS IDPersona, '------------------' AS ApellidoNombre, 1 AS Orden FROM Persona) UNION (SELECT IDPersona, Apellido + ', ' + Nombre AS ApellidoNombre, 2 AS Orden FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, .IDConductor) Then
+        If Not CSM_Control_DataCombo.FillFromSQL(datcboConductor, "(SELECT 0 AS IDPersona, '------------------' AS ApellidoNombre, 1 AS Orden FROM Persona) UNION (SELECT IDPersona, dbo.udf_GetEntidadApellidoYNombre(Apellido, Nombre) AS ApellidoNombre, 2 AS Orden FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, .IDConductor) Then
             Unload Me
             Exit Sub
         End If
         
         If mNew Then
-            dtpFecha.Value = Date
-            dtpHora.Value = Time
+            dtpFecha.value = Date
+            dtpHora.value = Time
         Else
-            dtpFecha.Value = Format(.FechaHora, "Short Date")
-            dtpHora.Value = Format(.FechaHora, "Short Time")
+            dtpFecha.value = Format(.FechaHora, "Short Date")
+            dtpHora.value = Format(.FechaHora, "Short Time")
         End If
         dtpFecha_Change
         txtKilometraje.Text = IIf(.Kilometraje = 0, "", .Kilometraje)
@@ -659,7 +659,7 @@ Private Sub cmdOK_Click()
         datcboVehiculoMantenimientoGrupo.SetFocus
         Exit Sub
     End If
-    If dtpFecha.Value > Date Then
+    If dtpFecha.value > Date Then
         If MsgBox("Está ingresando una acción con Fecha posterior a hoy." & vbCr & vbCr & "¿Desea continuar?", vbExclamation + vbYesNo, App.Title) = vbNo Then
             dtpFecha.SetFocus
             Exit Sub
@@ -731,7 +731,7 @@ Private Sub cmdOK_Click()
         .IDVehiculo = Val(datcboVehiculo.BoundText)
         .IDVehiculoMantenimientoGrupo = Val(datcboVehiculoMantenimientoGrupo.BoundText)
         .IDConductor = Val(datcboConductor.BoundText)
-        .FechaHora = CDate(Format(dtpFecha.Value, "Short Date") & " " & Format(dtpHora.Value, "Short Time"))
+        .FechaHora = CDate(Format(dtpFecha.value, "Short Date") & " " & Format(dtpHora.value, "Short Time"))
         If txtKilometraje.Text = "" Then
             .Kilometraje = 0
         Else
@@ -806,17 +806,17 @@ Private Sub cmdVehiculoMantenimientoGrupo_Click()
 End Sub
 
 Private Sub dtpFecha_Change()
-    txtDiaSemana.Text = WeekdayName(Weekday(dtpFecha.Value))
+    txtDiaSemana.Text = WeekdayName(Weekday(dtpFecha.value))
 End Sub
 
 Private Sub cmdAnterior_Click()
-    dtpFecha.Value = DateAdd("d", -1, dtpFecha.Value)
+    dtpFecha.value = DateAdd("d", -1, dtpFecha.value)
     dtpFecha.SetFocus
     dtpFecha_Change
 End Sub
 
 Private Sub cmdSiguiente_Click()
-    dtpFecha.Value = DateAdd("d", 1, dtpFecha.Value)
+    dtpFecha.value = DateAdd("d", 1, dtpFecha.value)
     dtpFecha.SetFocus
     dtpFecha_Change
 End Sub
@@ -824,10 +824,10 @@ End Sub
 Private Sub cmdHoy_Click()
     Dim OldValue As Date
     
-    OldValue = dtpFecha.Value
-    dtpFecha.Value = Date
+    OldValue = dtpFecha.value
+    dtpFecha.value = Date
     dtpFecha.SetFocus
-    If OldValue <> dtpFecha.Value Then
+    If OldValue <> dtpFecha.value Then
         dtpFecha_Change
     End If
 End Sub

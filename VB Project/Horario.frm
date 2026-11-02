@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.OCX"
 Object = "{38911DA0-E448-11D0-84A3-00DD01104159}#1.1#0"; "COMCT332.OCX"
 Object = "{86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCT2.OCX"
 Begin VB.Form frmHorario 
@@ -50,7 +50,7 @@ Begin VB.Form frmHorario
       FixedOrder      =   -1  'True
       _CBWidth        =   11895
       _CBHeight       =   1380
-      _Version        =   "6.7.9782"
+      _Version        =   "6.7.9816"
       Child1          =   "tlbMain"
       MinWidth1       =   4395
       MinHeight1      =   570
@@ -168,7 +168,7 @@ Begin VB.Form frmHorario
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
-            Format          =   151257090
+            Format          =   119668738
             CurrentDate     =   36950
          End
          Begin MSComCtl2.DTPicker dtpHoraHasta 
@@ -190,7 +190,7 @@ Begin VB.Form frmHorario
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
-            Format          =   151257090
+            Format          =   119668738
             CurrentDate     =   36950
          End
          Begin VB.Label lblHoraAnd 
@@ -518,9 +518,9 @@ Public Sub FillListView(ByVal DiaSemana As Byte, ByVal Hora As Date, ByVal IDRut
     
     If cboHora.ListIndex > 0 Then
         If cboHora.ListIndex < 7 Then
-            SQL_Where = SQL_Where & IIf(SQL_Where = "", " WHERE ", " AND ") & "convert(char(8), Horario.Hora, 108) " & cboHora.Text & " '" & Format(dtpHoraDesde.Value, "hh:nn:ss") & "'"
+            SQL_Where = SQL_Where & IIf(SQL_Where = "", " WHERE ", " AND ") & "convert(char(8), Horario.Hora, 108) " & cboHora.Text & " '" & Format(dtpHoraDesde.value, "hh:nn:ss") & "'"
         Else
-            SQL_Where = SQL_Where & IIf(SQL_Where = "", " WHERE ", " AND ") & "(convert(char(8), Horario.Hora, 108) >= '" & Format(dtpHoraDesde.Value, "hh:nn:ss") & "' AND convert(char(8), Horario.Hora, 108) <= '" & Format(dtpHoraHasta.Value, "hh:nn:ss") & "')"
+            SQL_Where = SQL_Where & IIf(SQL_Where = "", " WHERE ", " AND ") & "(convert(char(8), Horario.Hora, 108) >= '" & Format(dtpHoraDesde.value, "hh:nn:ss") & "' AND convert(char(8), Horario.Hora, 108) <= '" & Format(dtpHoraHasta.value, "hh:nn:ss") & "')"
         End If
     End If
     
@@ -552,10 +552,10 @@ Public Sub FillListView(ByVal DiaSemana As Byte, ByVal Hora As Date, ByVal IDRut
         Case 3  'VEHICULO
             SQL_OrderBy = " ORDER BY Vehiculo.Nombre" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Horario.DiaSemana" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Horario.IDRuta" & IIf(lvwData.SortOrder = lvwDescending, "", " DESC") & ", Horario.Hora" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
         Case 4  'CONDUCTOR
-            SQL_OrderBy = " ORDER BY Conductor.Apellido + ', ' + Conductor.Nombre" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Horario.DiaSemana" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Horario.IDRuta" & IIf(lvwData.SortOrder = lvwDescending, "", " DESC") & ", Horario.Hora" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
+            SQL_OrderBy = " ORDER BY Conductor" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Horario.DiaSemana" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Horario.IDRuta" & IIf(lvwData.SortOrder = lvwDescending, "", " DESC") & ", Horario.Hora" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
         Case 5  'CONDUCTOR 2 o ACTIVO
             If pParametro.Viaje_Permite_2_Conductores Then
-                SQL_OrderBy = " ORDER BY Conductor2.Apellido + ', ' + Conductor2.Nombre" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Horario.DiaSemana" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Horario.IDRuta" & IIf(lvwData.SortOrder = lvwDescending, "", " DESC") & ", Horario.Hora" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
+                SQL_OrderBy = " ORDER BY Conductor2" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Horario.DiaSemana" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Horario.IDRuta" & IIf(lvwData.SortOrder = lvwDescending, "", " DESC") & ", Horario.Hora" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
             Else
                 SQL_OrderBy = " ORDER BY Horario.Activo" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Horario.DiaSemana" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Horario.IDRuta" & IIf(lvwData.SortOrder = lvwDescending, "", " DESC") & ", Horario.Hora" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
             End If
@@ -564,23 +564,23 @@ Public Sub FillListView(ByVal DiaSemana As Byte, ByVal Hora As Date, ByVal IDRut
     End Select
     
     Set recData = New ADODB.Recordset
-    recData.Source = "SELECT Horario.DiaSemana, Horario.Hora, Horario.IDRuta, Vehiculo.Nombre AS Vehiculo, Conductor.Apellido + ', ' + Conductor.Nombre AS Conductor, Conductor2.Apellido + ', ' + Conductor2.Nombre AS Conductor2, Horario.Activo" & vbCr
+    recData.Source = "SELECT Horario.DiaSemana, Horario.Hora, Horario.IDRuta, Vehiculo.Nombre AS Vehiculo, dbo.udf_GetEntidadApellidoYNombre(Conductor.Apellido, Conductor.Nombre) AS Conductor, dbo.udf_GetEntidadApellidoYNombre(Conductor2.Apellido, Conductor2.Nombre) AS Conductor2, Horario.Activo" & vbCr
     recData.Source = recData.Source & "FROM ((Horario LEFT JOIN Vehiculo ON Horario.IDVehiculo = Vehiculo.IDVehiculo) LEFT JOIN Persona AS Conductor ON Horario.IDConductor = Conductor.IDPersona) LEFT JOIN Persona AS Conductor2 ON Horario.IDConductor2 = Conductor2.IDPersona" & SQL_Where & SQL_OrderBy
     recData.Open , pDatabase.Connection, adOpenForwardOnly, adLockReadOnly, adCmdText
     
     With recData
         If Not .EOF Then
             Do While Not .EOF
-                Set ListItem = lvwData.ListItems.Add(, KEY_STRINGER & .Fields("DiaSemana").Value & KEY_DELIMITER & Format(.Fields("Hora").Value, "Long Time") & KEY_DELIMITER & RTrim(.Fields("IDRuta").Value), WeekdayName(.Fields("DiaSemana").Value))
-                ListItem.SubItems(1) = Format(.Fields("Hora").Value, "Short Time")
-                ListItem.SubItems(2) = RTrim(.Fields("IDRuta").Value)
-                ListItem.SubItems(3) = .Fields("Vehiculo").Value & ""
-                ListItem.SubItems(4) = .Fields("Conductor").Value & ""
+                Set ListItem = lvwData.ListItems.Add(, KEY_STRINGER & .Fields("DiaSemana").value & KEY_DELIMITER & Format(.Fields("Hora").value, "Long Time") & KEY_DELIMITER & RTrim(.Fields("IDRuta").value), WeekdayName(.Fields("DiaSemana").value))
+                ListItem.SubItems(1) = Format(.Fields("Hora").value, "Short Time")
+                ListItem.SubItems(2) = RTrim(.Fields("IDRuta").value)
+                ListItem.SubItems(3) = .Fields("Vehiculo").value & ""
+                ListItem.SubItems(4) = .Fields("Conductor").value & ""
                 If pParametro.Viaje_Permite_2_Conductores Then
-                    ListItem.SubItems(5) = .Fields("Conductor2").Value & ""
-                    ListItem.SubItems(6) = GetBooleanString(.Fields("Activo").Value)
+                    ListItem.SubItems(5) = .Fields("Conductor2").value & ""
+                    ListItem.SubItems(6) = GetBooleanString(.Fields("Activo").value)
                 Else
-                    ListItem.SubItems(5) = GetBooleanString(.Fields("Activo").Value)
+                    ListItem.SubItems(5) = GetBooleanString(.Fields("Activo").value)
                 End If
                 .MoveNext
             Loop
@@ -628,19 +628,19 @@ Public Sub FillComboBoxRuta()
     End If
     
     Set recRuta = New ADODB.Recordset
-    recRuta.Source = "SELECT IDRuta FROM Ruta WHERE IDRuta <> '" & ReplaceQuote(pParametro.Ruta_ID_Otra) & "' AND Activo = 1" & IIf(pCPermiso.RutaWhere <> "", " AND " & Replace(pCPermiso.RutaWhere, "%TABLENAME%", "Ruta"), "") & " ORDER BY IDRuta"
+    recRuta.Source = "SELECT IDRuta FROM Ruta WHERE Activo = 1" & IIf(pCPermiso.RutaWhere <> "", " AND " & Replace(pCPermiso.RutaWhere, "%TABLENAME%", "Ruta"), "") & " ORDER BY IDRuta"
     recRuta.Open , pDatabase.Connection, adOpenForwardOnly, adLockReadOnly, adCmdText
     
     cboRuta.Clear
     cboRuta.AddItem "<Todas>"
     Do While Not recRuta.EOF
-        cboRuta.AddItem RTrim(recRuta("IDRuta").Value)
+        cboRuta.AddItem RTrim(recRuta("IDRuta").value)
         recRuta.MoveNext
     Loop
     recRuta.Close
     Set recRuta = Nothing
 
-    cboRuta.ListIndex = CSM_Control_ComboBox.GetListIndexByText(cboRuta, IDRutaSave, cscpItemOrfirst)
+    cboRuta.ListIndex = CSM_Control_ComboBox.GetListIndexByText(cboRuta, IDRutaSave, cscpItemOrFirst)
     Exit Sub
     
 ErrorHandler:
@@ -736,8 +736,8 @@ Private Sub Form_Load()
     cboHora.AddItem "Entre"
     cboHora.ListIndex = 0
     
-    dtpHoraDesde.Value = CDate("00:00:00")
-    dtpHoraHasta.Value = CDate("23:59:00")
+    dtpHoraDesde.value = CDate("00:00:00")
+    dtpHoraHasta.value = CDate("23:59:00")
     
     FillComboBoxRuta
     cboRuta.ListIndex = 0
@@ -751,8 +751,8 @@ Private Sub Form_Load()
     pParametro.GetCoolBarSettings "Horario", cbrMain
     pParametro.GetListViewSettings "Horario", lvwData
     lvwData.ColumnHeaders(lvwData.SortKey + 1).Icon = lvwData.SortOrder + 1
-    tlbPin.Buttons("PIN").Value = pParametro.Usuario_LeerNumero("Horario_Pin", tlbPin.Buttons("PIN").Value)
-    If tlbPin.Buttons("PIN").Value = tbrUnpressed Then
+    tlbPin.Buttons("PIN").value = pParametro.Usuario_LeerNumero("Horario_Pin", tlbPin.Buttons("PIN").value)
+    If tlbPin.Buttons("PIN").value = tbrUnpressed Then
         tlbPin.Buttons("PIN").Image = 1
     Else
         tlbPin.Buttons("PIN").Image = 2
@@ -776,7 +776,7 @@ Private Sub Form_Unload(Cancel As Integer)
     WindowState = vbNormal
     pParametro.SaveCoolBarSettings "Horario", cbrMain
     pParametro.SaveListViewSettings "Horario", lvwData
-    pParametro.Usuario_GuardarNumero "Horario_Pin", tlbPin.Buttons("PIN").Value
+    pParametro.Usuario_GuardarNumero "Horario_Pin", tlbPin.Buttons("PIN").value
 End Sub
 
 Private Sub lvwData_ColumnClick(ByVal ColumnHeader As MSComctlLib.ColumnHeader)
@@ -962,7 +962,7 @@ Private Sub tlbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
                 End If
                 
                 'Forms(FormIndex).SetFocus
-                If tlbPin.Buttons("PIN").Value = tbrUnpressed Then
+                If tlbPin.Buttons("PIN").value = tbrUnpressed Then
                     Unload Me
                 End If
                 Screen.MousePointer = vbDefault
@@ -972,7 +972,7 @@ Private Sub tlbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
 End Sub
 
 Private Sub tlbPin_ButtonClick(ByVal Button As MSComctlLib.Button)
-    If Button.Value = tbrUnpressed Then
+    If Button.value = tbrUnpressed Then
         Button.Image = 1
     Else
         Button.Image = 2

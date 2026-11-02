@@ -385,7 +385,7 @@ Begin VB.Form frmViajeGenerar
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   107544577
+      Format          =   119668737
       CurrentDate     =   36950
    End
    Begin VB.Line Line2 
@@ -611,12 +611,27 @@ Private Sub GenerarViajes(ByVal Fecha As Date, ByVal DiaSemana As Byte)
                 lblStatus.Caption = "Generando el Viaje: " & WeekdayName(Weekday(Fecha)) & ", " & Format(Fecha, "Short Date") & " " & Format(recData("Hora").value, "Short Time") & " - " & RTrim(recData("IDRuta").value) & "..."
                 lblStatus.Refresh
                 
+                Select Case Viaje.IDRuta
+                    Case pParametro.Ruta_ID_Otra
+                        Viaje.RutaOtra = recData("RutaOtra").value & ""
+                        Viaje.IDPersona = Val(recData("IDPersona").value & "")
+                        Viaje.Importe = IIf(IsNull(recData("Importe").value), 0, recData("Importe").value)
+                    Case pParametro.Ruta_Paquete_ID
+                        Viaje.RutaOtra = recData("RutaOtra").value & ""
+                        Viaje.IDPersona = 0
+                        Viaje.Importe = IIf(IsNull(recData("Importe").value), 0, recData("Importe").value)
+                    Case Else
+                        Viaje.RutaOtra = ""
+                        Viaje.IDPersona = 0
+                        Viaje.Importe = 0
+                End Select
+                Viaje.Kilometro = Val(recData("Kilometro").value & "")
+                Viaje.Duracion = Val(recData("Duracion").value & "")
+                
                 Viaje.IDVehiculo = Val(recData("IDVehiculo").value & "")
                 Viaje.IDConductor = Val(recData("IDConductor").value & "")
                 Viaje.IDConductor2 = Val(recData("IDConductor2").value & "")
                 Viaje.DiaSemanaBase = DiaSemana
-                Viaje.Kilometro = Val(recData("Kilometro").value & "")
-                Viaje.Duracion = Val(recData("Duracion").value & "")
                 Viaje.Personal = recData("Personal").value
                 Viaje.Update
             End If

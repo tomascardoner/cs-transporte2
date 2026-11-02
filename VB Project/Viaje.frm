@@ -59,7 +59,7 @@ Begin VB.Form frmViaje
       FixedOrder      =   -1  'True
       _CBWidth        =   10800
       _CBHeight       =   1020
-      _Version        =   "6.7.9782"
+      _Version        =   "6.7.9816"
       Child1          =   "tlbMain"
       MinHeight1      =   570
       Width1          =   3000
@@ -373,7 +373,7 @@ Begin VB.Form frmViaje
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
-            Format          =   111411201
+            Format          =   119668737
             CurrentDate     =   36950
          End
          Begin MSComCtl2.DTPicker dtpFechaHasta 
@@ -395,7 +395,7 @@ Begin VB.Form frmViaje
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
-            Format          =   111411201
+            Format          =   119668737
             CurrentDate     =   36950
          End
          Begin VB.Label lblFechaAnd 
@@ -767,9 +767,9 @@ Public Sub FillListView(ByVal FechaHora As Date, ByVal IDRuta As String)
         Case 4  'VEHICULO
             SQL_OrderBy = " ORDER BY Vehiculo.Nombre" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", datepart(weekday, Viaje.FechaHora)" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Viaje.FechaHora" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Viaje.IDRuta + ': ' + Viaje.RutaOtra" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
         Case 5  'CONDUCTOR
-            SQL_OrderBy = " ORDER BY Conductor.Apellido + ', ' + Conductor.Nombre" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", datepart(weekday, Viaje.FechaHora)" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Viaje.FechaHora" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Viaje.IDRuta + ': ' + Viaje.RutaOtra" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
+            SQL_OrderBy = " ORDER BY dbo.udf_GetEntidadApellidoYNombre(Conductor.Apellido, Conductor.Nombre)" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", datepart(weekday, Viaje.FechaHora)" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Viaje.FechaHora" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Viaje.IDRuta + ': ' + Viaje.RutaOtra" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
         Case 6  'CONDUCTOR 2
-            SQL_OrderBy = " ORDER BY Conductor2.Apellido + ', ' + Conductor2.Nombre" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", datepart(weekday, Viaje.FechaHora)" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Viaje.FechaHora" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Viaje.IDRuta + ': ' + Viaje.RutaOtra" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
+            SQL_OrderBy = " ORDER BY dbo.udf_GetEntidadApellidoYNombre(Conductor2.Apellido, Conductor2.Nombre)" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", datepart(weekday, Viaje.FechaHora)" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Viaje.FechaHora" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Viaje.IDRuta + ': ' + Viaje.RutaOtra" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
         Case 7  'ESTADO
             SQL_OrderBy = " ORDER BY Viaje.Estado" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", datepart(weekday, Viaje.FechaHora)" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Viaje.FechaHora" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Viaje.IDRuta + ': ' + Viaje.RutaOtra" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
         Case 8  'ASIENTO LIBRE
@@ -783,7 +783,7 @@ Public Sub FillListView(ByVal FechaHora As Date, ByVal IDRuta As String)
     lvwData.ListItems.Clear
     
     Set recData = New ADODB.Recordset
-    recData.Source = "SELECT Viaje.FechaHora, Viaje.IDRuta, Viaje.RutaOtra, Viaje.Estado, Vehiculo.Asiento - Viaje.AsientoOcupado AS AsientoLibre, Vehiculo.Nombre AS Vehiculo, Conductor.Apellido + ', ' + Conductor.Nombre AS Conductor, Conductor2.Apellido + ', ' + Conductor2.Nombre AS Conductor2, Viaje.Notas" & vbCr
+    recData.Source = "SELECT Viaje.FechaHora, Viaje.IDRuta, Viaje.RutaOtra, Viaje.Estado, Vehiculo.Asiento - Viaje.AsientoOcupado AS AsientoLibre, Vehiculo.Nombre AS Vehiculo, dbo.udf_GetEntidadApellidoYNombre(Conductor.Apellido, Conductor.Nombre) AS Conductor, dbo.udf_GetEntidadApellidoYNombre(Conductor2.Apellido, Conductor2.Nombre) AS Conductor2, Viaje.Notas" & vbCr
     recData.Source = recData.Source & "FROM (((Viaje INNER JOIN Ruta ON Viaje.IDRuta = Ruta.IDRuta) LEFT JOIN Vehiculo ON Viaje.IDVehiculo = Vehiculo.IDVehiculo) LEFT JOIN Persona AS Conductor ON Viaje.IDConductor = Conductor.IDPersona) LEFT JOIN Persona AS Conductor2 ON Viaje.IDConductor2 = Conductor2.IDPersona" & SQL_Where & SQL_OrderBy
     recData.MaxRecords = pParametro.Recordset_MaxRecords
     recData.Open , pDatabase.Connection, adOpenForwardOnly, adLockReadOnly, adCmdText

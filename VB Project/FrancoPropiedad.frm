@@ -103,7 +103,7 @@ Begin VB.Form frmFrancoPropiedad
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   93388801
+      Format          =   119668737
       CurrentDate     =   36950
       MaxDate         =   73050
       MinDate         =   36526
@@ -251,5 +251,5 @@ Public Sub FillComboBoxConductor()
     If cboConductor.ListCount > 0 Then
         KeySave = cboConductor.ItemData(cboConductor.ListIndex)
     End If
-    Call CSM_Control_ComboBox.FillFromSQL(cboConductor, "SELECT IDPersona, Apellido + ', ' + Nombre AS ApellidoNombre FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "' ORDER BY Apellido, Nombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, KeySave)
+    Call CSM_Control_ComboBox.FillFromSQL(cboConductor, "SELECT IDPersona, dbo.udf_GetEntidadApellidoYNombre(Apellido, Nombre) AS ApellidoNombre FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "' ORDER BY Apellido, Nombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, KeySave)
 End Sub

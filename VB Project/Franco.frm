@@ -58,7 +58,7 @@ Begin VB.Form frmFranco
       FixedOrder      =   -1  'True
       _CBWidth        =   9420
       _CBHeight       =   1020
-      _Version        =   "6.7.9782"
+      _Version        =   "6.7.9816"
       Child1          =   "tlbMain"
       MinWidth1       =   4410
       MinHeight1      =   570
@@ -189,7 +189,7 @@ Begin VB.Form frmFranco
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
-            Format          =   111542273
+            Format          =   119668737
             CurrentDate     =   36950
          End
          Begin MSComCtl2.DTPicker dtpFechaHasta 
@@ -211,7 +211,7 @@ Begin VB.Form frmFranco
                Italic          =   0   'False
                Strikethrough   =   0   'False
             EndProperty
-            Format          =   111542273
+            Format          =   119668737
             CurrentDate     =   36950
          End
          Begin VB.Label lblFecha 
@@ -449,17 +449,17 @@ Public Sub FillListView(ByVal Fecha As Date, ByVal IDPersona As Long)
     
     Select Case lvwData.SortKey
         Case 0  'FECHA + CONDUCTOR
-            SQL_OrderBy = " ORDER BY Franco.Fecha" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Persona.Apellido + ', ' + Persona.Nombre" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
+            SQL_OrderBy = " ORDER BY Franco.Fecha" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", dbo.udf_GetEntidadApellidoYNombre(Persona.Apellido, Persona.Nombre)" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
         Case 1  'CONDUCTOR + FECHA
-            SQL_OrderBy = " ORDER BY Persona.Apellido + ', ' + Persona.Nombre" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Franco.Fecha" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
+            SQL_OrderBy = " ORDER BY dbo.udf_GetEntidadApellidoYNombre(Persona.Apellido, Persona.Nombre)" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Franco.Fecha" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
         Case 2  'IMPORTE + FECHA + CONDUCTOR
-            SQL_OrderBy = " ORDER BY Franco.Importe" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Franco.Fecha" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Persona.Apellido + ', ' + Persona.Nombre" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
+            SQL_OrderBy = " ORDER BY Franco.Importe" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", Franco.Fecha" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC") & ", dbo.udf_GetEntidadApellidoYNombre(Persona.Apellido, Persona.Nombre)" & IIf(lvwData.SortOrder = lvwAscending, "", " DESC")
     End Select
     
     lvwData.ListItems.Clear
     
     Set recData = New ADODB.Recordset
-    recData.Source = "SELECT Franco.IDPersona, Franco.Fecha, Persona.Apellido + ', ' + Persona.Nombre AS ApellidoNombre, Franco.Importe FROM Franco INNER JOIN Persona ON Franco.IDPersona = Persona.IDPersona" & SQL_Where & SQL_OrderBy
+    recData.Source = "SELECT Franco.IDPersona, Franco.Fecha, dbo.udf_GetEntidadApellidoYNombre(Persona.Apellido, Persona.Nombre) AS ApellidoNombre, Franco.Importe FROM Franco INNER JOIN Persona ON Franco.IDPersona = Persona.IDPersona" & SQL_Where & SQL_OrderBy
     recData.MaxRecords = pParametro.Recordset_MaxRecords
     recData.Open , pDatabase.Connection, adOpenForwardOnly, adLockReadOnly, adCmdText
     
@@ -775,5 +775,5 @@ Public Sub FillComboBoxConductor()
     If cboConductor.ListCount > 0 Then
         KeySave = cboConductor.ItemData(cboConductor.ListIndex)
     End If
-    Call CSM_Control_ComboBox.FillFromSQL(cboConductor, "(SELECT -1 AS IDPersona, '<Todos>' AS ApellidoNombre, 1 AS Orden FROM Persona) UNION (SELECT IDPersona, Apellido + ', ' + Nombre AS ApellidoNombre, 2 AS Orden FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, KeySave)
+    Call CSM_Control_ComboBox.FillFromSQL(cboConductor, "(SELECT -1 AS IDPersona, '<Todos>' AS ApellidoNombre, 1 AS Orden FROM Persona) UNION (SELECT IDPersona, dbo.udf_GetEntidadApellidoYNombre(Apellido, Nombre) AS ApellidoNombre, 2 AS Orden FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, KeySave)
 End Sub

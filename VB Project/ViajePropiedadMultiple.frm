@@ -338,29 +338,29 @@ Public Sub LoadDataAndShow(ByRef ParentForm As Form, ByVal CFechaHora As Collect
         Exit Sub
     End If
     
-    If Not CSM_Control_DataCombo.FillFromSQL(datcboConductor, "(SELECT -1 AS IDPersona, '------------------' AS ApellidoNombre, 1 AS Orden FROM Persona) UNION (SELECT IDPersona, Apellido + ', ' + Nombre AS ApellidoNombre, 2 AS Orden FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, IDConductor) Then
+    If Not CSM_Control_DataCombo.FillFromSQL(datcboConductor, "(SELECT -1 AS IDPersona, '------------------' AS ApellidoNombre, 1 AS Orden FROM Persona) UNION (SELECT IDPersona, dbo.udf_GetEntidadApellidoYNombre(Apellido, Nombre) AS ApellidoNombre, 2 AS Orden FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, IDConductor) Then
         Unload Me
         Exit Sub
     End If
     
-    If Not CSM_Control_DataCombo.FillFromSQL(datcboConductor2, "(SELECT -1 AS IDPersona, '------------------' AS ApellidoNombre, 1 AS Orden FROM Persona) UNION (SELECT IDPersona, Apellido + ', ' + Nombre AS ApellidoNombre, 2 AS Orden FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, IDConductor2) Then
+    If Not CSM_Control_DataCombo.FillFromSQL(datcboConductor2, "(SELECT -1 AS IDPersona, '------------------' AS ApellidoNombre, 1 AS Orden FROM Persona) UNION (SELECT IDPersona, dbo.udf_GetEntidadApellidoYNombre(Apellido, Nombre) AS ApellidoNombre, 2 AS Orden FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "') ORDER BY Orden, ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpItemOrFirst, IDConductor2) Then
         Unload Me
         Exit Sub
     End If
     
-    chkVehiculoModificar.Value = IIf(IDVehiculo = -1, vbUnchecked, vbChecked)
+    chkVehiculoModificar.value = IIf(IDVehiculo = -1, vbUnchecked, vbChecked)
     chkVehiculoModificar.Visible = (IDVehiculo = -1)
     txtVehiculo.Visible = (IDVehiculo = -1)
     datcboVehiculo.Visible = (IDVehiculo <> -1)
     cmdVehiculo.Visible = (IDVehiculo <> -1)
     
-    chkConductorModificar.Value = IIf(IDConductor = -1, vbUnchecked, vbChecked)
+    chkConductorModificar.value = IIf(IDConductor = -1, vbUnchecked, vbChecked)
     chkConductorModificar.Visible = (IDConductor = -1)
     txtConductor.Visible = (IDConductor = -1)
     datcboConductor.Visible = (IDConductor <> -1)
     cmdConductor.Visible = (IDConductor <> -1)
     
-    chkConductor2Modificar.Value = IIf(IDConductor2 = -1, vbUnchecked, vbChecked)
+    chkConductor2Modificar.value = IIf(IDConductor2 = -1, vbUnchecked, vbChecked)
     chkConductor2Modificar.Visible = (pParametro.Viaje_Permite_2_Conductores And IDConductor2 = -1)
     txtConductor2.Visible = (pParametro.Viaje_Permite_2_Conductores And IDConductor = -1)
     datcboConductor2.Visible = (pParametro.Viaje_Permite_2_Conductores And IDConductor <> -1)
@@ -404,21 +404,21 @@ Public Sub FillComboBoxConductor()
 End Sub
 
 Private Sub chkConductorModificar_Click()
-    txtConductor.Visible = (chkConductorModificar.Value = vbUnchecked)
-    datcboConductor.Visible = (chkConductorModificar.Value = vbChecked)
-    cmdConductor.Visible = (chkConductorModificar.Value = vbChecked)
+    txtConductor.Visible = (chkConductorModificar.value = vbUnchecked)
+    datcboConductor.Visible = (chkConductorModificar.value = vbChecked)
+    cmdConductor.Visible = (chkConductorModificar.value = vbChecked)
 End Sub
 
 Private Sub chkConductor2Modificar_Click()
-    txtConductor2.Visible = (chkConductor2Modificar.Value = vbUnchecked)
-    datcboConductor2.Visible = (chkConductor2Modificar.Value = vbChecked)
-    cmdConductor2.Visible = (chkConductor2Modificar.Value = vbChecked)
+    txtConductor2.Visible = (chkConductor2Modificar.value = vbUnchecked)
+    datcboConductor2.Visible = (chkConductor2Modificar.value = vbChecked)
+    cmdConductor2.Visible = (chkConductor2Modificar.value = vbChecked)
 End Sub
 
 Private Sub chkVehiculoModificar_Click()
-    txtVehiculo.Visible = (chkVehiculoModificar.Value = vbUnchecked)
-    datcboVehiculo.Visible = (chkVehiculoModificar.Value = vbChecked)
-    cmdVehiculo.Visible = (chkVehiculoModificar.Value = vbChecked)
+    txtVehiculo.Visible = (chkVehiculoModificar.value = vbUnchecked)
+    datcboVehiculo.Visible = (chkVehiculoModificar.value = vbChecked)
+    cmdVehiculo.Visible = (chkVehiculoModificar.value = vbChecked)
 End Sub
 
 Private Sub cmdCancel_Click()
@@ -428,7 +428,7 @@ End Sub
 Private Sub cmdOK_Click()
     Dim Viaje As Viaje
     
-    If chkVehiculoModificar.Value = vbChecked Or chkConductorModificar.Value = vbChecked Then
+    If chkVehiculoModificar.value = vbChecked Or chkConductorModificar.value = vbChecked Then
         If pParametro.Viaje_Permite_2_Conductores Then
             If Val(datcboConductor.BoundText) = -1 And Val(datcboConductor2.BoundText) > -1 Then
                 MsgBox "Si selecciona el Conductor N° 2, debe seleccionar el Conductor N° 1.", vbInformation, App.Title
@@ -440,13 +440,13 @@ Private Sub cmdOK_Click()
         For Each Viaje In mCViaje
             With Viaje
                 .RefreshListSkip = True
-                If chkVehiculoModificar.Value = vbChecked Then
+                If chkVehiculoModificar.value = vbChecked Then
                     .IDVehiculo = IIf(Val(datcboVehiculo.BoundText) = -1, 0, Val(datcboVehiculo.BoundText))
                 End If
-                If chkConductorModificar.Value = vbChecked Then
+                If chkConductorModificar.value = vbChecked Then
                     .IDConductor = IIf(Val(datcboConductor.BoundText) = -1, 0, Val(datcboConductor.BoundText))
                 End If
-                If chkConductor2Modificar.Value = vbChecked Then
+                If chkConductor2Modificar.value = vbChecked Then
                     .IDConductor2 = IIf(Val(datcboConductor2.BoundText) = -1, 0, Val(datcboConductor2.BoundText))
                 End If
                 

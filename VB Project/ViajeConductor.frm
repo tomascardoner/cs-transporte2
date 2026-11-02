@@ -1,7 +1,7 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.OCX"
 Object = "{86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCT2.OCX"
-Object = "{F0D2F211-CCB0-11D0-A316-00AA00688B10}#1.0#0"; "msdatlst.ocx"
+Object = "{F0D2F211-CCB0-11D0-A316-00AA00688B10}#1.0#0"; "MSDATLST.OCX"
 Begin VB.Form frmViajeConductor 
    Caption         =   "Viajes por Conductor"
    ClientHeight    =   6195
@@ -246,7 +246,7 @@ Begin VB.Form frmViajeConductor
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   104792065
+      Format          =   119668737
       CurrentDate     =   36950
    End
    Begin MSComCtl2.DTPicker dtpFechaHasta 
@@ -267,7 +267,7 @@ Begin VB.Form frmViajeConductor
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Format          =   104792065
+      Format          =   119668737
       CurrentDate     =   36950
    End
    Begin MSDataListLib.DataCombo datcboConductor 
@@ -466,7 +466,7 @@ Public Function FillListView() As Boolean
     End If
     
     'FILTRO DE FECHAS
-    SQL_Where = SQL_Where & IIf(SQL_Where = "", "WHERE ", " AND ") & "Viaje.FechaHora BETWEEN '" & Format(dtpFechaDesde.Value, "yyyy/mm/dd") & " 00:00:00' AND '" & Format(dtpFechaHasta.Value, "yyyy/mm/dd") & " 23:59:00'"
+    SQL_Where = SQL_Where & IIf(SQL_Where = "", "WHERE ", " AND ") & "Viaje.FechaHora BETWEEN '" & Format(dtpFechaDesde.value, "yyyy/mm/dd") & " 00:00:00' AND '" & Format(dtpFechaHasta.value, "yyyy/mm/dd") & " 23:59:00'"
     
     'FILTRO DE CONDUCTOR
     SQL_Where = SQL_Where & IIf(SQL_Where = "", "WHERE ", " AND ") & "(Viaje.IDConductor = " & Val(datcboConductor.BoundText) & " OR Viaje.IDConductor2 = " & Val(datcboConductor.BoundText) & ")"
@@ -481,28 +481,28 @@ Public Function FillListView() As Boolean
     End If
     
     'FILTROS DE ESTADOS
-    If chkEstadoActivo.Value = vbUnchecked Then
+    If chkEstadoActivo.value = vbUnchecked Then
         SQL_Where = SQL_Where & IIf(SQL_Where = "", "WHERE ", " AND ") & "Viaje.Estado <> '" & VIAJE_ESTADO_ACTIVO & "'"
     End If
-    If chkEstadoEnProgreso.Value = vbUnchecked Then
+    If chkEstadoEnProgreso.value = vbUnchecked Then
         SQL_Where = SQL_Where & IIf(SQL_Where = "", "WHERE ", " AND ") & "Viaje.Estado <> '" & VIAJE_ESTADO_EN_PROGRESO & "'"
     End If
-    If chkEstadoFinalizado.Value = vbUnchecked Then
+    If chkEstadoFinalizado.value = vbUnchecked Then
         SQL_Where = SQL_Where & IIf(SQL_Where = "", "WHERE ", " AND ") & "Viaje.Estado <> '" & VIAJE_ESTADO_FINALIZADO & "'"
     End If
-    If chkEstadoCancelado.Value = vbUnchecked Then
+    If chkEstadoCancelado.value = vbUnchecked Then
         SQL_Where = SQL_Where & IIf(SQL_Where = "", "WHERE ", " AND ") & "Viaje.Estado <> '" & VIAJE_ESTADO_CANCELADO & "'"
     End If
     
     'FILTROS DE TRAMOS
     If pParametro.Viaje_Permite_2_Conductores Then
-        If chkTramo_Completo.Value = vbUnchecked Then
+        If chkTramo_Completo.value = vbUnchecked Then
             SQL_Where = SQL_Where & IIf(SQL_Where = "", "WHERE ", " AND ") & "NOT (ISNULL(Viaje.IDConductor2, 0) = 0)"
         End If
-        If chkTramo_Tramo1.Value = vbUnchecked Then
+        If chkTramo_Tramo1.value = vbUnchecked Then
             SQL_Where = SQL_Where & IIf(SQL_Where = "", "WHERE ", " AND ") & "NOT (ISNULL(Viaje.IDConductor2, 0) <> 0 AND Viaje.IDConductor = " & Val(datcboConductor.BoundText) & ")"
         End If
-        If chkTramo_Tramo2.Value = vbUnchecked Then
+        If chkTramo_Tramo2.value = vbUnchecked Then
             SQL_Where = SQL_Where & IIf(SQL_Where = "", "WHERE ", " AND ") & "NOT (ISNULL(Viaje.IDConductor2, 0) = " & Val(datcboConductor.BoundText) & ")"
         End If
     End If
@@ -560,19 +560,19 @@ Public Function FillListView() As Boolean
     With recData
         If Not .EOF Then
             Do While Not .EOF
-                Set ListItem = lvwData.ListItems.Add(, KEY_STRINGER & .Fields("FechaHora").Value & KEY_DELIMITER & RTrim(.Fields("IDRuta").Value), WeekdayName(Weekday(.Fields("FechaHora").Value)))
-                ListItem.SubItems(1) = Format(.Fields("FechaHora").Value, "Short Date")
-                ListItem.SubItems(2) = Format(.Fields("FechaHora").Value, "Short Time")
-                ListItem.SubItems(3) = RTrim(.Fields("IDRuta").Value) & IIf(RTrim(.Fields("IDRuta").Value) = pParametro.Ruta_ID_Otra, ": " & .Fields("RutaOtra").Value, "")
-                ListItem.SubItems(4) = .Fields("Vehiculo").Value & ""
-                Viaje.Estado = .Fields("Estado").Value
+                Set ListItem = lvwData.ListItems.Add(, KEY_STRINGER & .Fields("FechaHora").value & KEY_DELIMITER & RTrim(.Fields("IDRuta").value), WeekdayName(Weekday(.Fields("FechaHora").value)))
+                ListItem.SubItems(1) = Format(.Fields("FechaHora").value, "Short Date")
+                ListItem.SubItems(2) = Format(.Fields("FechaHora").value, "Short Time")
+                ListItem.SubItems(3) = RTrim(.Fields("IDRuta").value) & IIf(RTrim(.Fields("IDRuta").value) = pParametro.Ruta_ID_Otra, ": " & .Fields("RutaOtra").value, "")
+                ListItem.SubItems(4) = .Fields("Vehiculo").value & ""
+                Viaje.Estado = .Fields("Estado").value
                 ListItem.SubItems(5) = Viaje.Estado_ToString
-                ListItem.SubItems(6) = .Fields("Tramo").Value
-                If .Fields("Importe").Value = 0 Then
+                ListItem.SubItems(6) = .Fields("Tramo").value
+                If .Fields("Importe").value = 0 Then
                     ListItem.SubItems(7) = " "
                 Else
-                    ListItem.SubItems(7) = Format(.Fields("Importe").Value, "Currency")
-                    ImporteTotal = ImporteTotal + .Fields("Importe").Value
+                    ListItem.SubItems(7) = Format(.Fields("Importe").value, "Currency")
+                    ImporteTotal = ImporteTotal + .Fields("Importe").value
                 End If
                 ListItem.ForeColor = Viaje.Estado_ToColor
                 ListItem.Bold = Viaje.Estado_ToBold
@@ -603,7 +603,7 @@ ErrorHandler:
 End Function
 
 Private Sub cmdAnteriorDesde_Click()
-    dtpFechaDesde.Value = DateAdd("d", -1, dtpFechaDesde.Value)
+    dtpFechaDesde.value = DateAdd("d", -1, dtpFechaDesde.value)
     dtpFechaDesde.SetFocus
     dtpFechaDesde_Change
 End Sub
@@ -615,25 +615,25 @@ Private Sub cmdShowReport_Click()
         Set Reporte = New Reporte
         Reporte.IDReporte = "Viaje_Listado_Conductor_Importe"
         If Reporte.Load() Then
-            Reporte.Titulo = "Viajes del Conductor: " & datcboConductor.Text & " - Desde el " & dtpFechaDesde.Value & " al " & dtpFechaHasta.Value
-            Reporte.Parametros("FechaDesde").Valor = dtpFechaDesde.Value & " 00:00"
-            Reporte.Parametros("FechaHasta").Valor = dtpFechaHasta.Value & " 23:59"
+            Reporte.Titulo = "Viajes del Conductor: " & datcboConductor.Text & " - Desde el " & dtpFechaDesde.value & " al " & dtpFechaHasta.value
+            Reporte.Parametros("FechaDesde").Valor = dtpFechaDesde.value & " 00:00"
+            Reporte.Parametros("FechaHasta").Valor = dtpFechaHasta.value & " 23:59"
             Reporte.Parametros("IDConductor").Valor = Val(datcboConductor.BoundText)
             If datcboRuta.Text <> CSM_Constant.ITEM_ALL_FEMALE Then
                 Reporte.Parametros("IDRuta").Valor = datcboRuta.Text
             End If
             
             'FILTROS DE ESTADOS
-            Reporte.Parametros("EstadoActivo").Valor = chkEstadoActivo.Value
-            Reporte.Parametros("EstadoEnProgreso").Valor = chkEstadoEnProgreso.Value
-            Reporte.Parametros("EstadoFinalizado").Valor = chkEstadoFinalizado.Value
-            Reporte.Parametros("EstadoCancelado").Valor = chkEstadoCancelado.Value
+            Reporte.Parametros("EstadoActivo").Valor = chkEstadoActivo.value
+            Reporte.Parametros("EstadoEnProgreso").Valor = chkEstadoEnProgreso.value
+            Reporte.Parametros("EstadoFinalizado").Valor = chkEstadoFinalizado.value
+            Reporte.Parametros("EstadoCancelado").Valor = chkEstadoCancelado.value
             
             'FILTROS DE TRAMOS
             If pParametro.Viaje_Permite_2_Conductores Then
-                Reporte.Parametros("TramoCompleto").Valor = chkTramo_Completo.Value
-                Reporte.Parametros("Tramo1").Valor = chkTramo_Tramo1.Value
-                Reporte.Parametros("Tramo2").Valor = chkTramo_Tramo2.Value
+                Reporte.Parametros("TramoCompleto").Valor = chkTramo_Completo.value
+                Reporte.Parametros("Tramo1").Valor = chkTramo_Tramo1.value
+                Reporte.Parametros("Tramo2").Valor = chkTramo_Tramo2.value
             End If
         
             If Reporte.OpenReport() Then
@@ -650,7 +650,7 @@ Private Sub dtpFechaDesde_Change()
 End Sub
 
 Private Sub cmdSiguienteDesde_Click()
-    dtpFechaDesde.Value = DateAdd("d", 1, dtpFechaDesde.Value)
+    dtpFechaDesde.value = DateAdd("d", 1, dtpFechaDesde.value)
     dtpFechaDesde.SetFocus
     dtpFechaDesde_Change
 End Sub
@@ -658,16 +658,16 @@ End Sub
 Private Sub cmdHoyDesde_Click()
     Dim OldValue As Date
     
-    OldValue = dtpFechaDesde.Value
-    dtpFechaDesde.Value = Date
+    OldValue = dtpFechaDesde.value
+    dtpFechaDesde.value = Date
     dtpFechaDesde.SetFocus
-    If OldValue <> dtpFechaDesde.Value Then
+    If OldValue <> dtpFechaDesde.value Then
         dtpFechaDesde_Change
     End If
 End Sub
 
 Private Sub cmdAnteriorHasta_Click()
-    dtpFechaHasta.Value = DateAdd("d", -1, dtpFechaHasta.Value)
+    dtpFechaHasta.value = DateAdd("d", -1, dtpFechaHasta.value)
     dtpFechaHasta.SetFocus
     dtpFechaHasta_Change
 End Sub
@@ -677,7 +677,7 @@ Private Sub dtpFechaHasta_Change()
 End Sub
 
 Private Sub cmdSiguienteHasta_Click()
-    dtpFechaHasta.Value = DateAdd("d", 1, dtpFechaHasta.Value)
+    dtpFechaHasta.value = DateAdd("d", 1, dtpFechaHasta.value)
     dtpFechaHasta.SetFocus
     dtpFechaHasta_Change
 End Sub
@@ -685,10 +685,10 @@ End Sub
 Private Sub cmdHoyHasta_Click()
     Dim OldValue As Date
     
-    OldValue = dtpFechaHasta.Value
-    dtpFechaHasta.Value = Date
+    OldValue = dtpFechaHasta.value
+    dtpFechaHasta.value = Date
     dtpFechaHasta.SetFocus
-    If OldValue <> dtpFechaHasta.Value Then
+    If OldValue <> dtpFechaHasta.value Then
         dtpFechaHasta_Change
     End If
 End Sub
@@ -772,10 +772,10 @@ Private Sub Form_Load()
     Set lvwData.ColumnHeaderIcons = frmMDI.ilsFormSortColumn
     '//////////////////////////////////////////////////////////
     
-    dtpFechaDesde.Value = Date
-    dtpFechaHasta.Value = Date
+    dtpFechaDesde.value = Date
+    dtpFechaHasta.value = Date
     
-    Call CSM_Control_DataCombo.FillFromSQL(datcboConductor, "SELECT IDPersona, Apellido + ', ' + Nombre AS ApellidoNombre FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "' ORDER BY ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpFirst)
+    Call CSM_Control_DataCombo.FillFromSQL(datcboConductor, "SELECT IDPersona, dbo.udf_GetEntidadApellidoYNombre(Apellido, Nombre) AS ApellidoNombre FROM Persona WHERE Activo = 1 AND EntidadTipo = '" & ENTIDAD_TIPO_PERSONA_CONDUCTOR & "' ORDER BY ApellidoNombre", "IDPersona", "ApellidoNombre", "Conductores", cscpFirst)
     
     Call CSM_Control_DataCombo.FillFromSQL(datcboRuta, "(SELECT '" & CSM_Constant.ITEM_ALL_FEMALE & "' AS IDRuta) UNION (SELECT RTRIM(IDRuta) AS IDRuta FROM Ruta WHERE Activo = 1" & IIf(pCPermiso.RutaWhere <> "", " AND " & Replace(pCPermiso.RutaWhere, "%TABLENAME%", "Ruta"), "") & ") ORDER BY IDRuta", "IDRuta", "IDRuta", "Rutas", cscpFirst)
         
